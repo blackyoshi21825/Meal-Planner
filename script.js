@@ -161,10 +161,9 @@ document.getElementById('nutrientForm').addEventListener('submit', function(e) {
 
     ];
 
-    // Add vegetarian category to each meal
+    // Add dietary properties to each meal
     meals.forEach(meal => {
         // Determine if meal is vegetarian based on name
-        // No meat-related ingredients suggests vegetarian
         meal.isVegetarian = !meal.name.toLowerCase().includes("chicken") && 
                             !meal.name.toLowerCase().includes("beef") && 
                             !meal.name.toLowerCase().includes("turkey") && 
@@ -172,12 +171,55 @@ document.getElementById('nutrientForm').addEventListener('submit', function(e) {
                             !meal.name.toLowerCase().includes("tuna") && 
                             !meal.name.toLowerCase().includes("shrimp") && 
                             !meal.name.toLowerCase().includes("cod");
+        
+        // Determine if meal is vegan (no animal products)
+        meal.isVegan = meal.isVegetarian && 
+                      !meal.name.toLowerCase().includes("cheese") && 
+                      !meal.name.toLowerCase().includes("yogurt") && 
+                      !meal.name.toLowerCase().includes("milk") && 
+                      !meal.name.toLowerCase().includes("egg") && 
+                      !meal.name.toLowerCase().includes("honey") && 
+                      !meal.name.toLowerCase().includes("butter") &&
+                      !meal.name.toLowerCase().includes("parmesan") &&
+                      !meal.name.toLowerCase().includes("mozzarella") &&
+                      !meal.name.toLowerCase().includes("feta") &&
+                      !meal.name.toLowerCase().includes("cottage cheese") &&
+                      !meal.name.toLowerCase().includes("mayonnaise") &&
+                      !meal.name.toLowerCase().includes("cream") &&
+                      !meal.name.toLowerCase().includes("whey");
+
+        // Better approach: check ingredients instead of just name
+        for (let ingredient in meal.ingredients) {
+            const ingredientLower = ingredient.toLowerCase();
+            if (ingredientLower.includes("cheese") || 
+                ingredientLower.includes("milk") || 
+                ingredientLower.includes("yogurt") || 
+                ingredientLower.includes("egg") || 
+                ingredientLower.includes("honey") || 
+                ingredientLower.includes("butter") ||
+                ingredientLower.includes("cream") ||
+                ingredientLower.includes("mayonnaise") ||
+                ingredientLower.includes("whey")) {
+                meal.isVegan = false;
+                break;
+            }
+        }
+
+        // Determine if meal is a liquid (soup, smoothie, etc.)
+        meal.isLiquid = meal.name.toLowerCase().includes("soup") || 
+                        meal.name.toLowerCase().includes("smoothie") ||
+                        meal.name.toLowerCase().includes("juice") ||
+                        meal.name.toLowerCase().includes("shake") ||
+                        meal.name.toLowerCase().includes("beverage") ||
+                        meal.name.toLowerCase().includes("drink");
     });
 
     // Add filter event listeners
     document.getElementById('allMealsFilter').addEventListener('change', filterMeals);
     document.getElementById('vegetarianFilter').addEventListener('change', filterMeals);
     document.getElementById('nonVegetarianFilter').addEventListener('change', filterMeals);
+    document.getElementById('veganFilter').addEventListener('change', filterMeals);
+    document.getElementById('liquidFilter').addEventListener('change', filterMeals);
 
     // Function to filter meals based on selected filter
     function filterMeals() {
@@ -185,14 +227,20 @@ document.getElementById('nutrientForm').addEventListener('submit', function(e) {
         const showAll = document.getElementById('allMealsFilter').checked;
         const showVegetarian = document.getElementById('vegetarianFilter').checked;
         const showNonVegetarian = document.getElementById('nonVegetarianFilter').checked;
+        const showVegan = document.getElementById('veganFilter').checked;
+        const showLiquid = document.getElementById('liquidFilter').checked;
         
         // Filter the meals
         let filteredMeals = suggestedMeals;
         
         if (showVegetarian) {
-            filteredMeals = suggestedMeals.filter(meal => meal.isVegetarian);
+            filteredMeals = suggestedMeals.filter(meal => meal.isVegetarian && !meal.isVegan);
         } else if (showNonVegetarian) {
             filteredMeals = suggestedMeals.filter(meal => !meal.isVegetarian);
+        } else if (showVegan) {
+            filteredMeals = suggestedMeals.filter(meal => meal.isVegan);
+        } else if (showLiquid) {
+            filteredMeals = suggestedMeals.filter(meal => meal.isLiquid);
         }
         
         // Display the filtered meals
@@ -211,13 +259,20 @@ document.getElementById('nutrientForm').addEventListener('submit', function(e) {
                 let mealItem = document.createElement('div');
                 mealItem.classList.add('meal');
                 
-                // Add vegetarian or non-vegetarian badge
+                // Add dietary badges
                 let mealHTML = `<h3>${meal.name}`;
-                if (meal.isVegetarian) {
+                if (meal.isVegan) {
+                    mealHTML += ` <span class="vegan-badge">Vegan</span>`;
+                } else if (meal.isVegetarian) {
                     mealHTML += ` <span class="veg-badge">Veg</span>`;
                 } else {
                     mealHTML += ` <span class="non-veg-badge">Non-Veg</span>`;
                 }
+                
+                if (meal.isLiquid) {
+                    mealHTML += ` <span class="liquid-badge">Liquid</span>`;
+                }
+                
                 mealHTML += `</h3>`;
                 
                 // Add nutritional info
@@ -240,7 +295,7 @@ document.getElementById('nutrientForm').addEventListener('submit', function(e) {
         }
     }
 
-    // Add CSS for vegetarian and non-vegetarian badges
+    // Add CSS for vegetarian, non-vegetarian, vegan, and liquid badges
     const style = document.createElement('style');
     style.textContent = `
     .veg-badge {
@@ -261,15 +316,33 @@ document.getElementById('nutrientForm').addEventListener('submit', function(e) {
         vertical-align: middle;
         margin-left: 5px;
     }
+    .vegan-badge {
+        background-color: #ff9900;
+        color: white;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 0.7em;
+        vertical-align: middle;
+        margin-left: 5px;
+    }
+    .liquid-badge {
+        background-color: #2196F3;
+        color: white;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 0.7em;
+        vertical-align: middle;
+        margin-left: 5px;
+    }
     `;
     document.head.appendChild(style);
 
-    // Improved matching function with ±100% tolerance
+    // Improved matching function with ±50% tolerance
     function isWithinTolerance(value, target) {
         if (isNaN(value) || isNaN(target)) return false;
         if (target === 0) return value === 0;
         
-        const tolerance = 0.50; // ±100% tolerance
+        const tolerance = 0.50; // 50% tolerance
         const lowerBound = target * (1 - tolerance);
         const upperBound = target * (1 + tolerance);
         
