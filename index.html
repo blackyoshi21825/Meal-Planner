@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meal Planner</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Daily Meal Planner</h1>
+        <p>Enter your daily nutritional values and get suggested meals.</p>
+
+        <!-- Nutrient Input Form -->
+        <form id="nutrientForm">
+            <label for="fiber">Fiber (1-10 g):</label>
+            <input type="number" id="fiber" required>
+
+            <label for="calories">Calories (100-500 kcal):</label>
+            <input type="number" id="calories" required>
+
+            <label for="protein">Protein (1-30 g):</label>
+            <input type="number" id="protein" required>
+
+            <label for="sugar">Sugar (1-14 g):</label>
+            <input type="number" id="sugar" required>
+
+            <label for="fat">Fat (1-15 g):</label>
+            <input type="number" id="fat" required>
+
+            <label for="vitamins">Vitamins (35-120% Daily Value):</label>
+            <input type="number" id="vitamins" required>
+
+            <button type="submit">Get Meals</button>
+        </form>
+
+        <div class="filter-options">
+            <h3>Filter Results</h3>
+            <div class="filter-row">
+                <label><input type="radio" name="dietType" id="allMealsFilter" checked> All Meals</label>
+                <label><input type="radio" name="dietType" id="vegetarianFilter"> Vegetarian</label>
+                <label><input type="radio" name="dietType" id="nonVegetarianFilter"> Non-Vegetarian</label>
+            </div>
+        </div>
+
+        <div id="mealList" class="meal-list">
+            <!-- Meal suggestions will appear here -->
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
