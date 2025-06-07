@@ -105,53 +105,111 @@ document.getElementById('nutrientForm').addEventListener('submit', function(e) {
             return;
         }
         
-        // Create a container for the meals
-        const mealContainer = document.createElement('div');
-        mealContainer.classList.add('meal-container');
+        // Pagination variables
+        const mealsPerPage = 8; // Changed from 9 to 8
+        let currentPage = 1;
+        const totalPages = Math.ceil(mealsToDisplay.length / mealsPerPage);
         
-        // Add each meal as a card
-        mealsToDisplay.forEach(meal => {
-            const mealCard = document.createElement('div');
-            mealCard.classList.add('meal-card');
+        // Function to show meals for current page
+        function showPage(page) {
+            const start = (page - 1) * mealsPerPage;
+            const end = start + mealsPerPage;
+            const currentPageMeals = mealsToDisplay.slice(start, end);
             
-            // Create meal content
-            let mealHTML = `<h3>${meal.name}`;
+            // Create meal container
+            const mealContainer = document.createElement('div');
+            mealContainer.classList.add('meal-container');
             
-            // Add dietary badges
-            if (meal.isVegan) {
-                mealHTML += ` <span class="vegan-badge">Vegan</span>`;
-            } else if (meal.isVegetarian) {
-                mealHTML += ` <span class="veg-badge">Veg</span>`;
-            } else {
-                mealHTML += ` <span class="non-veg-badge">Non-Veg</span>`;
-            }
+            // Add each meal as a card
+            currentPageMeals.forEach(meal => {
+                const mealCard = document.createElement('div');
+                mealCard.classList.add('meal-card');
+                
+                // Create meal content
+                let mealHTML = `<h3>${meal.name}`;
+                
+                // Add dietary badges
+                if (meal.isVegan) {
+                    mealHTML += ` <span class="vegan-badge">Vegan</span>`;
+                } else if (meal.isVegetarian) {
+                    mealHTML += ` <span class="veg-badge">Veg</span>`;
+                } else {
+                    mealHTML += ` <span class="non-veg-badge">Non-Veg</span>`;
+                }
+                
+                if (meal.isLiquid) {
+                    mealHTML += ` <span class="liquid-badge">Liquid</span>`;
+                }
+                
+                mealHTML += `</h3>`;
+                
+                // Add nutritional info
+                mealHTML += `<p class="nutrition-info">
+                    Calories: ${meal.calories} | 
+                    Protein: ${meal.protein}g | 
+                    Fiber: ${meal.fiber}g | 
+                    Sugar: ${meal.sugar}g | 
+                    Fat: ${meal.fat}g
+                </p>`;
+                
+                mealHTML += `<p><strong>Ingredients:</strong></p><ul>`;
+                for (let ingredient in meal.ingredients) {
+                    mealHTML += `<li>${ingredient}: ${meal.ingredients[ingredient]}g</li>`;
+                }
+                mealHTML += `</ul>`;
+                
+                mealCard.innerHTML = mealHTML;
+                mealContainer.appendChild(mealCard);
+            });
             
-            if (meal.isLiquid) {
-                mealHTML += ` <span class="liquid-badge">Liquid</span>`;
-            }
+            mealList.appendChild(mealContainer);
             
-            mealHTML += `</h3>`;
-            
-            // Add nutritional info
-            mealHTML += `<p class="nutrition-info">
-                Calories: ${meal.calories} | 
-                Protein: ${meal.protein}g | 
-                Fiber: ${meal.fiber}g | 
-                Sugar: ${meal.sugar}g | 
-                Fat: ${meal.fat}g
-            </p>`;
-            
-            mealHTML += `<p><strong>Ingredients:</strong></p><ul>`;
-            for (let ingredient in meal.ingredients) {
-                mealHTML += `<li>${ingredient}: ${meal.ingredients[ingredient]}g</li>`;
-            }
-            mealHTML += `</ul>`;
-            
-            mealCard.innerHTML = mealHTML;
-            mealContainer.appendChild(mealCard);
-        });
+            // Add pagination controls
+            renderPaginationControls();
+        }
         
-        mealList.appendChild(mealContainer);
+        // Create pagination controls
+        function renderPaginationControls() {
+            const paginationDiv = document.createElement('div');
+            paginationDiv.classList.add('pagination');
+            
+            // Previous button
+            const prevBtn = document.createElement('button');
+            prevBtn.textContent = 'Previous';
+            prevBtn.disabled = currentPage === 1;
+            prevBtn.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    mealList.innerHTML = "";
+                    showPage(currentPage);
+                }
+            });
+            
+            // Page indicator
+            const pageIndicator = document.createElement('span');
+            pageIndicator.textContent = `Page ${currentPage} of ${totalPages}`;
+            pageIndicator.classList.add('page-indicator');
+            
+            // Next button
+            const nextBtn = document.createElement('button');
+            nextBtn.textContent = 'Next';
+            nextBtn.disabled = currentPage === totalPages;
+            nextBtn.addEventListener('click', () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    mealList.innerHTML = "";
+                    showPage(currentPage);
+                }
+            });
+            
+            paginationDiv.appendChild(prevBtn);
+            paginationDiv.appendChild(pageIndicator);
+            paginationDiv.appendChild(nextBtn);
+            mealList.appendChild(paginationDiv);
+        }
+        
+        // Show first page initially
+        showPage(currentPage);
     }
 
     // Add CSS for the new layout
