@@ -95,7 +95,7 @@ document.getElementById('nutrientForm').addEventListener('submit', function(e) {
         displayMeals(filteredMeals);
     }
 
-    // Function to display meals in a matrix layout
+    // Function to display meals in a simpler list layout
     function displayMeals(mealsToDisplay) {
         const mealList = document.getElementById('mealList');
         mealList.innerHTML = "";
@@ -105,76 +105,79 @@ document.getElementById('nutrientForm').addEventListener('submit', function(e) {
             return;
         }
         
-        // Create a table for the meal matrix
-        const table = document.createElement('table');
-        table.classList.add('meal-matrix');
+        // Create a container for the meals
+        const mealContainer = document.createElement('div');
+        mealContainer.classList.add('meal-container');
         
-        // Define number of columns
-        const columnsPerRow = 3;
-        
-        // Create rows and cells
-        for (let i = 0; i < mealsToDisplay.length; i += columnsPerRow) {
-            const row = document.createElement('tr');
+        // Add each meal as a card
+        mealsToDisplay.forEach(meal => {
+            const mealCard = document.createElement('div');
+            mealCard.classList.add('meal-card');
             
-            // Add cells to this row
-            for (let j = 0; j < columnsPerRow; j++) {
-                if (i + j < mealsToDisplay.length) {
-                    const cell = document.createElement('td');
-                    cell.classList.add('meal-cell');
-                    const meal = mealsToDisplay[i + j];
-                    
-                    // Create meal content
-                    let mealHTML = `<div class="meal-card"><h3>${meal.name}`;
-                    
-                    // Add dietary badges
-                    if (meal.isVegan) {
-                        mealHTML += ` <span class="vegan-badge">Vegan</span>`;
-                    } else if (meal.isVegetarian) {
-                        mealHTML += ` <span class="veg-badge">Veg</span>`;
-                    } else {
-                        mealHTML += ` <span class="non-veg-badge">Non-Veg</span>`;
-                    }
-                    
-                    if (meal.isLiquid) {
-                        mealHTML += ` <span class="liquid-badge">Liquid</span>`;
-                    }
-                    
-                    mealHTML += `</h3>`;
-                    
-                    // Add nutritional info
-                    mealHTML += `<p class="nutrition-info">
-                        Calories: ${meal.calories} | 
-                        Protein: ${meal.protein}g | 
-                        Fiber: ${meal.fiber}g | 
-                        Sugar: ${meal.sugar}g | 
-                        Fat: ${meal.fat}g
-                    </p>`;
-                    
-                    mealHTML += `<p><strong>Ingredients:</strong></p><ul>`;
-                    for (let ingredient in meal.ingredients) {
-                        mealHTML += `<li>${ingredient}: ${meal.ingredients[ingredient]}g</li>`;
-                    }
-                    mealHTML += `</ul></div>`;
-                    
-                    cell.innerHTML = mealHTML;
-                    row.appendChild(cell);
-                } else {
-                    // Add empty cell to maintain grid structure
-                    const cell = document.createElement('td');
-                    cell.classList.add('meal-cell', 'empty-cell');
-                    row.appendChild(cell);
-                }
+            // Create meal content
+            let mealHTML = `<h3>${meal.name}`;
+            
+            // Add dietary badges
+            if (meal.isVegan) {
+                mealHTML += ` <span class="vegan-badge">Vegan</span>`;
+            } else if (meal.isVegetarian) {
+                mealHTML += ` <span class="veg-badge">Veg</span>`;
+            } else {
+                mealHTML += ` <span class="non-veg-badge">Non-Veg</span>`;
             }
             
-            table.appendChild(row);
-        }
+            if (meal.isLiquid) {
+                mealHTML += ` <span class="liquid-badge">Liquid</span>`;
+            }
+            
+            mealHTML += `</h3>`;
+            
+            // Add nutritional info
+            mealHTML += `<p class="nutrition-info">
+                Calories: ${meal.calories} | 
+                Protein: ${meal.protein}g | 
+                Fiber: ${meal.fiber}g | 
+                Sugar: ${meal.sugar}g | 
+                Fat: ${meal.fat}g
+            </p>`;
+            
+            mealHTML += `<p><strong>Ingredients:</strong></p><ul>`;
+            for (let ingredient in meal.ingredients) {
+                mealHTML += `<li>${ingredient}: ${meal.ingredients[ingredient]}g</li>`;
+            }
+            mealHTML += `</ul>`;
+            
+            mealCard.innerHTML = mealHTML;
+            mealContainer.appendChild(mealCard);
+        });
         
-        mealList.appendChild(table);
+        mealList.appendChild(mealContainer);
     }
 
-    // Add CSS for vegetarian, non-vegetarian, vegan, and liquid badges
+    // Add CSS for the new layout
     const style = document.createElement('style');
     style.textContent = `
+    .meal-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+    }
+
+    .meal-card {
+        background-color: #ecf0f1;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        width: 300px;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .meal-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
     .veg-badge {
         background-color: #4CAF50;
         color: white;
