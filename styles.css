@@ -61,29 +61,54 @@ form button:hover {
     background-color: #2980b9;
 }
 
-/* Meal List Styles */
-.meal-list {
+/* Meal Matrix Styles */
+.meal-matrix {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 15px;
     margin-top: 20px;
 }
 
-.meal {
+.meal-cell {
+    vertical-align: top;
+    width: 33.33%;
+    padding: 0;
+}
+
+.meal-card {
     background-color: #ecf0f1;
     padding: 15px;
     border-radius: 8px;
-    margin-bottom: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    height: 100%;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.meal h3 {
+.meal-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.meal-card h3 {
     color: #2c3e50;
     margin-bottom: 10px;
+    font-size: 1.1em;
 }
 
-.meal ul {
+.meal-card ul {
     list-style-type: none;
+    max-height: 150px;
+    overflow-y: auto;
+    padding-right: 5px;
 }
 
-.meal ul li {
+.meal-card ul li {
     margin: 5px 0;
+    font-size: 0.9em;
+}
+
+.empty-cell {
+    border: none;
 }
 
 /* Filter Options Styles */
