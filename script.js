@@ -56,27 +56,52 @@ document.getElementById('nutrientForm').addEventListener('submit', function(e) {
                        meal.name.toLowerCase().includes("masala") ||
                        meal.name.toLowerCase().includes("tikka") ||
                        meal.name.toLowerCase().includes("lentil") ||
+                       meal.name.toLowerCase().includes("") ||
                        meal.name.toLowerCase().includes("chutney");
                   
         meal.isMediterranean = meal.name.toLowerCase().includes("olive oil") || 
                               meal.name.toLowerCase().includes("feta") ||
                               meal.name.toLowerCase().includes("hummus") ||
+                              meal.name.toLowerCase().includes("tahini") ||
+                              meal.name.toLowerCase().includes("falafel") ||
                               meal.name.toLowerCase().includes("greek");
                           
         meal.isMexican = meal.name.toLowerCase().includes("taco") || 
                         meal.name.toLowerCase().includes("burrito") ||
                         meal.name.toLowerCase().includes("salsa") ||
+                        meal.name.toLowerCase().includes("quesadilla") ||
+                        meal.name.toLowerCase().includes("gazpacho") ||
                         meal.name.toLowerCase().includes("cilantro");
                     
         meal.isItalian = meal.name.toLowerCase().includes("pasta") || 
                         meal.name.toLowerCase().includes("pizza") ||
                         meal.name.toLowerCase().includes("parmesan") ||
+                        meal.name.toLowerCase().includes("primavera") ||
+                        meal.name.toLowerCase().includes("risotto") ||
+                        meal.name.toLowerCase().includes("marinara") ||
                         meal.name.toLowerCase().includes("mozzarella");
 
         meal.isJapanese = meal.name.toLowerCase().includes("sushi") || 
                          meal.name.toLowerCase().includes("miso") ||
                          meal.name.toLowerCase().includes("teriyaki") ||
                          meal.name.toLowerCase().includes("ramen");
+
+        // Add French cuisine detection
+        meal.isFrench = meal.name.toLowerCase().includes("croissant") || 
+                       meal.name.toLowerCase().includes("baguette") ||
+                       meal.name.toLowerCase().includes("ratatouille") ||
+                       meal.name.toLowerCase().includes("quiche") ||
+                       meal.name.toLowerCase().includes("soufflé") ||
+                       meal.name.toLowerCase().includes("souffle") ||
+                       meal.name.toLowerCase().includes("cassoulet") ||
+                       meal.name.toLowerCase().includes("coq au vin") ||
+                       meal.name.toLowerCase().includes("crème") ||
+                       meal.name.toLowerCase().includes("creme") ||
+                       meal.name.toLowerCase().includes("béchamel") ||
+                       meal.name.toLowerCase().includes("bechamel") ||
+                       meal.name.toLowerCase().includes("dijon") ||
+                       meal.name.toLowerCase().includes("provençal") ||
+                       meal.name.toLowerCase().includes("provencal");
     });
 
     // Add filter event listeners
@@ -91,6 +116,7 @@ document.getElementById('nutrientForm').addEventListener('submit', function(e) {
     document.getElementById('americanFilter').addEventListener('change', filterMeals);
     document.getElementById('asianFilter').addEventListener('change', filterMeals);
     document.getElementById('chineseFilter').addEventListener('change', filterMeals);
+    document.getElementById('frenchFilter').addEventListener('change', filterMeals);
     document.getElementById('indianFilter').addEventListener('change', filterMeals);
     document.getElementById('italianFilter').addEventListener('change', filterMeals);
     document.getElementById('japaneseFilter').addEventListener('change', filterMeals);
@@ -111,6 +137,7 @@ document.getElementById('nutrientForm').addEventListener('submit', function(e) {
         const showAmerican = document.getElementById('americanFilter').checked;
         const showAsian = document.getElementById('asianFilter').checked;
         const showChinese = document.getElementById('chineseFilter').checked;
+        const showFrench = document.getElementById('frenchFilter').checked;
         const showIndian = document.getElementById('indianFilter').checked;
         const showItalian = document.getElementById('italianFilter').checked;
         const showJapanese = document.getElementById('japaneseFilter').checked;
@@ -140,6 +167,8 @@ document.getElementById('nutrientForm').addEventListener('submit', function(e) {
                 filteredMeals = filteredMeals.filter(meal => meal.isAsian);
             } else if (showChinese) {
                 filteredMeals = filteredMeals.filter(meal => meal.isChinese);
+            } else if (showFrench) {
+                filteredMeals = filteredMeals.filter(meal => meal.isFrench);
             } else if (showIndian) {
                 filteredMeals = filteredMeals.filter(meal => meal.isIndian);
             } else if (showItalian) {
@@ -212,6 +241,9 @@ document.getElementById('nutrientForm').addEventListener('submit', function(e) {
                 }
                 if (meal.isChinese) {
                     mealHTML += ` <span class="chinese-badge">Chinese</span>`;
+                }
+                if (meal.isFrench) {
+                    mealHTML += ` <span class="french-badge">French</span>`;
                 }
                 if (meal.isIndian) {
                     mealHTML += ` <span class="indian-badge">Indian</span>`;
