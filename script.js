@@ -62,23 +62,16 @@ document.getElementById('nutrientForm').addEventListener('submit', function(e) {
         meal.isMediterranean = meal.name.toLowerCase().includes("olive oil") || 
                               meal.name.toLowerCase().includes("feta") ||
                               meal.name.toLowerCase().includes("hummus") ||
-                              meal.name.toLowerCase().includes("tahini") ||
-                              meal.name.toLowerCase().includes("falafel") ||
                               meal.name.toLowerCase().includes("greek");
                           
         meal.isMexican = meal.name.toLowerCase().includes("taco") || 
                         meal.name.toLowerCase().includes("burrito") ||
                         meal.name.toLowerCase().includes("salsa") ||
-                        meal.name.toLowerCase().includes("quesadilla") ||
-                        meal.name.toLowerCase().includes("gazpacho") ||
                         meal.name.toLowerCase().includes("cilantro");
                     
         meal.isItalian = meal.name.toLowerCase().includes("pasta") || 
                         meal.name.toLowerCase().includes("pizza") ||
                         meal.name.toLowerCase().includes("parmesan") ||
-                        meal.name.toLowerCase().includes("primavera") ||
-                        meal.name.toLowerCase().includes("risotto") ||
-                        meal.name.toLowerCase().includes("marinara") ||
                         meal.name.toLowerCase().includes("mozzarella");
 
         meal.isJapanese = meal.name.toLowerCase().includes("sushi") || 

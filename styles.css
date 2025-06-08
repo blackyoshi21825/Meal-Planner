@@ -251,7 +251,7 @@ form button:active {
 }
 
 /* Add cuisine badge styles */
-.american-badge, .asian-badge, .chinese-badge, .french-badge, .indian-badge, .italian-badge, .japanese-badge, .mediterranean-badge, .mexican-badge {
+.american-badge, .asian-badge, .chinese-badge, .indian-badge, .italian-badge, .japanese-badge, .mediterranean-badge, .mexican-badge {
     color: white;
     padding: 4px 8px;
     border-radius: 20px;
@@ -273,10 +273,6 @@ form button:active {
 
 .chinese-badge {
     background: linear-gradient(135deg, #F44336 0%, #D32F2F 100%);
-}
-
-.french-badge {
-    background: linear-gradient(135deg, #3D5AFE 0%, #304FFE 100%);
 }
 
 .indian-badge {
