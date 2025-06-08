@@ -222,7 +222,7 @@ document.getElementById('nutrientForm').addEventListener('submit', function(e) {
                     mealHTML += ` <span class="japanese-badge">Japanese</span>`;
                 }
                 if (meal.isMediterranean) {
-                    mealHTML += ` <span class="mediterranean-badge">Med</span>`;
+                    mealHTML += ` <span class="mediterranean-badge">Mediterranean</span>`;
                 }
                 if (meal.isMexican) {
                     mealHTML += ` <span class="mexican-badge">Mexican</span>`;
