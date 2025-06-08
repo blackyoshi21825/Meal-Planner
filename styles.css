@@ -251,7 +251,7 @@ form button:active {
 }
 
 /* Add cuisine badge styles */
-.american-badge, .asian-badge, .chinese-badge, .indian-badge, .mediterranean-badge, .mexican-badge, .italian-badge {
+.american-badge, .asian-badge, .chinese-badge, .indian-badge, .italian-badge, .japanese-badge, .mediterranean-badge, .mexican-badge {
     color: white;
     padding: 4px 8px;
     border-radius: 20px;
@@ -289,6 +289,10 @@ form button:active {
 
 .italian-badge {
     background: linear-gradient(135deg, #7E57C2 0%, #512DA8 100%);
+}
+
+.japanese-badge {
+    background: linear-gradient(135deg, #E91E63 0%, #C2185B 100%);
 }
 
 /* Enhanced Nutrition Info */

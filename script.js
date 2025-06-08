@@ -109,6 +109,16 @@ document.getElementById('nutrientForm').addEventListener('submit', function(e) {
                         meal.name.toLowerCase().includes("mozzarella") ||
                         meal.name.toLowerCase().includes("tomato sauce") ||
                         meal.name.toLowerCase().includes("risotto");
+
+        meal.isJapanese = meal.name.toLowerCase().includes("sushi") || 
+                         meal.name.toLowerCase().includes("miso") ||
+                         meal.name.toLowerCase().includes("teriyaki") ||
+                         meal.name.toLowerCase().includes("tempura") ||
+                         meal.name.toLowerCase().includes("ramen") ||
+                         meal.name.toLowerCase().includes("udon") ||
+                         meal.name.toLowerCase().includes("sashimi") ||
+                         meal.name.toLowerCase().includes("matcha") ||
+                         meal.name.toLowerCase().includes("bento");
     });
 
     // Add filter event listeners
@@ -127,6 +137,7 @@ document.getElementById('nutrientForm').addEventListener('submit', function(e) {
     document.getElementById('italianFilter').addEventListener('change', filterMeals);
     document.getElementById('mediterraneanFilter').addEventListener('change', filterMeals);
     document.getElementById('mexicanFilter').addEventListener('change', filterMeals);
+    document.getElementById('japaneseFilter').addEventListener('change', filterMeals);
 
     // Function to filter meals based on selected filter
     function filterMeals() {
@@ -144,6 +155,7 @@ document.getElementById('nutrientForm').addEventListener('submit', function(e) {
         const showChinese = document.getElementById('chineseFilter').checked;
         const showIndian = document.getElementById('indianFilter').checked;
         const showItalian = document.getElementById('italianFilter').checked;
+        const showJapanese = document.getElementById('japaneseFilter').checked;
         const showMediterranean = document.getElementById('mediterraneanFilter').checked;
         const showMexican = document.getElementById('mexicanFilter').checked;
         
@@ -171,6 +183,8 @@ document.getElementById('nutrientForm').addEventListener('submit', function(e) {
             filteredMeals = filteredMeals.filter(meal => meal.isIndian);
         } else if (showItalian) {
             filteredMeals = filteredMeals.filter(meal => meal.isItalian);
+        } else if (showJapanese) {
+            filteredMeals = filteredMeals.filter(meal => meal.isJapanese);
         } else if (showMediterranean) {
             filteredMeals = filteredMeals.filter(meal => meal.isMediterranean);
         } else if (showMexican) {
@@ -231,7 +245,7 @@ document.getElementById('nutrientForm').addEventListener('submit', function(e) {
                 if (meal.isAmerican) {
                     mealHTML += ` <span class="american-badge">American</span>`;
                 }
-                if (meal.isAsian && !meal.isChinese && !meal.isIndian) {
+                if (meal.isAsian && !meal.isChinese && !meal.isIndian && !meal.isJapanese) {
                     mealHTML += ` <span class="asian-badge">Asian</span>`;
                 }
                 if (meal.isChinese) {
@@ -242,6 +256,9 @@ document.getElementById('nutrientForm').addEventListener('submit', function(e) {
                 }
                 if (meal.isItalian) {
                     mealHTML += ` <span class="italian-badge">Italian</span>`;
+                }
+                if (meal.isJapanese) {
+                    mealHTML += ` <span class="japanese-badge">Japanese</span>`;
                 }
                 if (meal.isMediterranean) {
                     mealHTML += ` <span class="mediterranean-badge">Med</span>`;
