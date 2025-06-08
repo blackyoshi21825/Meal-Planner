@@ -116,8 +116,13 @@ form button:active {
 .filter-row {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
-    margin-bottom: 10px;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.filter-row label {
+    margin-right: 10px;
+    white-space: nowrap;
 }
 
 .filter-options label {
@@ -243,6 +248,47 @@ form button:active {
 
 .liquid-badge {
     background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+}
+
+/* Add cuisine badge styles */
+.american-badge, .asian-badge, .chinese-badge, .indian-badge, .mediterranean-badge, .mexican-badge, .italian-badge {
+    color: white;
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-size: 0.7em;
+    font-weight: bold;
+    vertical-align: middle;
+    margin-left: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: inline-block;
+}
+
+.american-badge {
+    background: linear-gradient(135deg, #3F51B5 0%, #303F9F 100%);
+}
+
+.asian-badge {
+    background: linear-gradient(135deg, #FF4081 0%, #C2185B 100%);
+}
+
+.chinese-badge {
+    background: linear-gradient(135deg, #F44336 0%, #D32F2F 100%);
+}
+
+.indian-badge {
+    background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+}
+
+.mediterranean-badge {
+    background: linear-gradient(135deg, #00BCD4 0%, #0097A7 100%);
+}
+
+.mexican-badge {
+    background: linear-gradient(135deg, #8BC34A 0%, #689F38 100%);
+}
+
+.italian-badge {
+    background: linear-gradient(135deg, #7E57C2 0%, #512DA8 100%);
 }
 
 /* Enhanced Nutrition Info */

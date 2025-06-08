@@ -60,6 +60,55 @@ document.getElementById('nutrientForm').addEventListener('submit', function(e) {
                         meal.name.toLowerCase().includes("shake") ||
                         meal.name.toLowerCase().includes("beverage") ||
                         meal.name.toLowerCase().includes("drink");
+
+        // Determine cuisine type based on ingredients and name
+        meal.isAmerican = meal.name.toLowerCase().includes("burger") || 
+                         meal.name.toLowerCase().includes("sandwich") ||
+                         meal.name.toLowerCase().includes("toast") ||
+                         meal.name.toLowerCase().includes("pancake") ||
+                         meal.name.toLowerCase().includes("hash") ||
+                         meal.name.toLowerCase().includes("muffin") ||
+                         meal.name.toLowerCase().includes("peanut butter");
+                     
+        meal.isAsian = meal.name.toLowerCase().includes("stir fry") || 
+                      meal.name.toLowerCase().includes("curry") ||
+                      meal.name.toLowerCase().includes("soy sauce") ||
+                      meal.name.toLowerCase().includes("rice") ||
+                      meal.name.toLowerCase().includes("noodle") ||
+                      meal.name.toLowerCase().includes("kimchi");
+                  
+        meal.isChinese = meal.name.toLowerCase().includes("stir fry") || 
+                        meal.name.toLowerCase().includes("fried rice") ||
+                        meal.name.toLowerCase().includes("soy sauce") ||
+                        meal.name.toLowerCase().includes("noodle") ||
+                        meal.name.toLowerCase().includes("wonton");
+                    
+        meal.isIndian = meal.name.toLowerCase().includes("curry") || 
+                       meal.name.toLowerCase().includes("masala") ||
+                       meal.name.toLowerCase().includes("tikka") ||
+                       meal.name.toLowerCase().includes("chutney") ||
+                       meal.name.toLowerCase().includes("paneer") ||
+                       meal.name.toLowerCase().includes("dal") ||
+                       meal.name.toLowerCase().includes("lentil");
+                  
+        meal.isMediterranean = meal.name.toLowerCase().includes("olive oil") || 
+                              meal.name.toLowerCase().includes("feta") ||
+                              meal.name.toLowerCase().includes("hummus") ||
+                              meal.name.toLowerCase().includes("greek");
+                          
+        meal.isMexican = meal.name.toLowerCase().includes("taco") || 
+                        meal.name.toLowerCase().includes("burrito") ||
+                        meal.name.toLowerCase().includes("salsa") ||
+                        meal.name.toLowerCase().includes("cilantro") ||
+                        meal.name.toLowerCase().includes("guacamole") ||
+                        meal.name.toLowerCase().includes("quesadilla");
+                    
+        meal.isItalian = meal.name.toLowerCase().includes("pasta") || 
+                        meal.name.toLowerCase().includes("pizza") ||
+                        meal.name.toLowerCase().includes("parmesan") ||
+                        meal.name.toLowerCase().includes("mozzarella") ||
+                        meal.name.toLowerCase().includes("tomato sauce") ||
+                        meal.name.toLowerCase().includes("risotto");
     });
 
     // Add filter event listeners
@@ -69,26 +118,63 @@ document.getElementById('nutrientForm').addEventListener('submit', function(e) {
     document.getElementById('veganFilter').addEventListener('change', filterMeals);
     document.getElementById('liquidFilter').addEventListener('change', filterMeals);
 
+    // Add cuisine filter event listeners
+    document.getElementById('allCuisinesFilter').addEventListener('change', filterMeals);
+    document.getElementById('americanFilter').addEventListener('change', filterMeals);
+    document.getElementById('asianFilter').addEventListener('change', filterMeals);
+    document.getElementById('chineseFilter').addEventListener('change', filterMeals);
+    document.getElementById('indianFilter').addEventListener('change', filterMeals);
+    document.getElementById('italianFilter').addEventListener('change', filterMeals);
+    document.getElementById('mediterraneanFilter').addEventListener('change', filterMeals);
+    document.getElementById('mexicanFilter').addEventListener('change', filterMeals);
+
     // Function to filter meals based on selected filter
     function filterMeals() {
-        // Get current filter state
+        // Get current diet filter state
         const showAll = document.getElementById('allMealsFilter').checked;
         const showVegetarian = document.getElementById('vegetarianFilter').checked;
         const showNonVegetarian = document.getElementById('nonVegetarianFilter').checked;
         const showVegan = document.getElementById('veganFilter').checked;
         const showLiquid = document.getElementById('liquidFilter').checked;
         
-        // Filter the meals
+        // Get current cuisine filter state
+        const showAllCuisines = document.getElementById('allCuisinesFilter').checked;
+        const showAmerican = document.getElementById('americanFilter').checked;
+        const showAsian = document.getElementById('asianFilter').checked;
+        const showChinese = document.getElementById('chineseFilter').checked;
+        const showIndian = document.getElementById('indianFilter').checked;
+        const showItalian = document.getElementById('italianFilter').checked;
+        const showMediterranean = document.getElementById('mediterraneanFilter').checked;
+        const showMexican = document.getElementById('mexicanFilter').checked;
+        
+        // Filter the meals by diet type
         let filteredMeals = suggestedMeals;
         
         if (showVegetarian) {
-            filteredMeals = suggestedMeals.filter(meal => meal.isVegetarian && !meal.isVegan);
+            filteredMeals = filteredMeals.filter(meal => meal.isVegetarian && !meal.isVegan);
         } else if (showNonVegetarian) {
-            filteredMeals = suggestedMeals.filter(meal => !meal.isVegetarian);
+            filteredMeals = filteredMeals.filter(meal => !meal.isVegetarian);
         } else if (showVegan) {
-            filteredMeals = suggestedMeals.filter(meal => meal.isVegan);
+            filteredMeals = filteredMeals.filter(meal => meal.isVegan);
         } else if (showLiquid) {
-            filteredMeals = suggestedMeals.filter(meal => meal.isLiquid);
+            filteredMeals = filteredMeals.filter(meal => meal.isLiquid);
+        }
+        
+        // Further filter by cuisine type
+        if (showAmerican) {
+            filteredMeals = filteredMeals.filter(meal => meal.isAmerican);
+        } else if (showAsian) {
+            filteredMeals = filteredMeals.filter(meal => meal.isAsian);
+        } else if (showChinese) {
+            filteredMeals = filteredMeals.filter(meal => meal.isChinese);
+        } else if (showIndian) {
+            filteredMeals = filteredMeals.filter(meal => meal.isIndian);
+        } else if (showItalian) {
+            filteredMeals = filteredMeals.filter(meal => meal.isItalian);
+        } else if (showMediterranean) {
+            filteredMeals = filteredMeals.filter(meal => meal.isMediterranean);
+        } else if (showMexican) {
+            filteredMeals = filteredMeals.filter(meal => meal.isMexican);
         }
         
         // Display the filtered meals
@@ -127,7 +213,7 @@ document.getElementById('nutrientForm').addEventListener('submit', function(e) {
                 
                 // Create meal content
                 let mealHTML = `<h3>${meal.name}`;
-                
+
                 // Add dietary badges
                 if (meal.isVegan) {
                     mealHTML += ` <span class="vegan-badge">Vegan</span>`;
@@ -136,11 +222,34 @@ document.getElementById('nutrientForm').addEventListener('submit', function(e) {
                 } else {
                     mealHTML += ` <span class="non-veg-badge">Non-Veg</span>`;
                 }
-                
+
                 if (meal.isLiquid) {
                     mealHTML += ` <span class="liquid-badge">Liquid</span>`;
                 }
-                
+
+                // Add cuisine badges
+                if (meal.isAmerican) {
+                    mealHTML += ` <span class="american-badge">American</span>`;
+                }
+                if (meal.isAsian && !meal.isChinese && !meal.isIndian) {
+                    mealHTML += ` <span class="asian-badge">Asian</span>`;
+                }
+                if (meal.isChinese) {
+                    mealHTML += ` <span class="chinese-badge">Chinese</span>`;
+                }
+                if (meal.isIndian) {
+                    mealHTML += ` <span class="indian-badge">Indian</span>`;
+                }
+                if (meal.isItalian) {
+                    mealHTML += ` <span class="italian-badge">Italian</span>`;
+                }
+                if (meal.isMediterranean) {
+                    mealHTML += ` <span class="mediterranean-badge">Med</span>`;
+                }
+                if (meal.isMexican) {
+                    mealHTML += ` <span class="mexican-badge">Mexican</span>`;
+                }
+
                 mealHTML += `</h3>`;
                 
                 // Add nutritional info
