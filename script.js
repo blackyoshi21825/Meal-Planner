@@ -55,6 +55,7 @@ document.getElementById('nutrientForm').addEventListener('submit', function(e) {
         meal.isIndian = meal.name.toLowerCase().includes("curry") || 
                        meal.name.toLowerCase().includes("masala") ||
                        meal.name.toLowerCase().includes("tikka") ||
+                       meal.name.toLowerCase().includes("lentil") ||
                        meal.name.toLowerCase().includes("chutney");
                   
         meal.isMediterranean = meal.name.toLowerCase().includes("olive oil") || 
