@@ -27,69 +27,35 @@ document.getElementById('nutrientForm').addEventListener('submit', function(e) {
                       !meal.name.toLowerCase().includes("milk") && 
                       !meal.name.toLowerCase().includes("egg") && 
                       !meal.name.toLowerCase().includes("honey") && 
-                      !meal.name.toLowerCase().includes("butter") &&
-                      !meal.name.toLowerCase().includes("parmesan") &&
-                      !meal.name.toLowerCase().includes("mozzarella") &&
-                      !meal.name.toLowerCase().includes("feta") &&
-                      !meal.name.toLowerCase().includes("cottage cheese") &&
-                      !meal.name.toLowerCase().includes("mayonnaise") &&
-                      !meal.name.toLowerCase().includes("cream") &&
-                      !meal.name.toLowerCase().includes("whey");
-
-        // Better approach: check ingredients instead of just name
-        for (let ingredient in meal.ingredients) {
-            const ingredientLower = ingredient.toLowerCase();
-            if (ingredientLower.includes("cheese") || 
-                ingredientLower.includes("milk") || 
-                ingredientLower.includes("yogurt") || 
-                ingredientLower.includes("egg") || 
-                ingredientLower.includes("honey") || 
-                ingredientLower.includes("butter") ||
-                ingredientLower.includes("cream") ||
-                ingredientLower.includes("mayonnaise") ||
-                ingredientLower.includes("whey")) {
-                meal.isVegan = false;
-                break;
-            }
-        }
+                      !meal.name.toLowerCase().includes("butter");
 
         // Determine if meal is a liquid (soup, smoothie, etc.)
         meal.isLiquid = meal.name.toLowerCase().includes("soup") || 
                         meal.name.toLowerCase().includes("smoothie") ||
                         meal.name.toLowerCase().includes("juice") ||
-                        meal.name.toLowerCase().includes("shake") ||
-                        meal.name.toLowerCase().includes("beverage") ||
-                        meal.name.toLowerCase().includes("drink");
+                        meal.name.toLowerCase().includes("shake");
 
         // Determine cuisine type based on ingredients and name
         meal.isAmerican = meal.name.toLowerCase().includes("burger") || 
                          meal.name.toLowerCase().includes("sandwich") ||
                          meal.name.toLowerCase().includes("toast") ||
-                         meal.name.toLowerCase().includes("pancake") ||
-                         meal.name.toLowerCase().includes("hash") ||
-                         meal.name.toLowerCase().includes("muffin") ||
-                         meal.name.toLowerCase().includes("peanut butter");
+                         meal.name.toLowerCase().includes("pancake");
                      
         meal.isAsian = meal.name.toLowerCase().includes("stir fry") || 
                       meal.name.toLowerCase().includes("curry") ||
                       meal.name.toLowerCase().includes("soy sauce") ||
                       meal.name.toLowerCase().includes("rice") ||
-                      meal.name.toLowerCase().includes("noodle") ||
-                      meal.name.toLowerCase().includes("kimchi");
+                      meal.name.toLowerCase().includes("noodle");
                   
         meal.isChinese = meal.name.toLowerCase().includes("stir fry") || 
                         meal.name.toLowerCase().includes("fried rice") ||
                         meal.name.toLowerCase().includes("soy sauce") ||
-                        meal.name.toLowerCase().includes("noodle") ||
-                        meal.name.toLowerCase().includes("wonton");
+                        meal.name.toLowerCase().includes("noodle");
                     
         meal.isIndian = meal.name.toLowerCase().includes("curry") || 
                        meal.name.toLowerCase().includes("masala") ||
                        meal.name.toLowerCase().includes("tikka") ||
-                       meal.name.toLowerCase().includes("chutney") ||
-                       meal.name.toLowerCase().includes("paneer") ||
-                       meal.name.toLowerCase().includes("dal") ||
-                       meal.name.toLowerCase().includes("lentil");
+                       meal.name.toLowerCase().includes("chutney");
                   
         meal.isMediterranean = meal.name.toLowerCase().includes("olive oil") || 
                               meal.name.toLowerCase().includes("feta") ||
@@ -99,26 +65,17 @@ document.getElementById('nutrientForm').addEventListener('submit', function(e) {
         meal.isMexican = meal.name.toLowerCase().includes("taco") || 
                         meal.name.toLowerCase().includes("burrito") ||
                         meal.name.toLowerCase().includes("salsa") ||
-                        meal.name.toLowerCase().includes("cilantro") ||
-                        meal.name.toLowerCase().includes("guacamole") ||
-                        meal.name.toLowerCase().includes("quesadilla");
+                        meal.name.toLowerCase().includes("cilantro");
                     
         meal.isItalian = meal.name.toLowerCase().includes("pasta") || 
                         meal.name.toLowerCase().includes("pizza") ||
                         meal.name.toLowerCase().includes("parmesan") ||
-                        meal.name.toLowerCase().includes("mozzarella") ||
-                        meal.name.toLowerCase().includes("tomato sauce") ||
-                        meal.name.toLowerCase().includes("risotto");
+                        meal.name.toLowerCase().includes("mozzarella");
 
         meal.isJapanese = meal.name.toLowerCase().includes("sushi") || 
                          meal.name.toLowerCase().includes("miso") ||
                          meal.name.toLowerCase().includes("teriyaki") ||
-                         meal.name.toLowerCase().includes("tempura") ||
-                         meal.name.toLowerCase().includes("ramen") ||
-                         meal.name.toLowerCase().includes("udon") ||
-                         meal.name.toLowerCase().includes("sashimi") ||
-                         meal.name.toLowerCase().includes("matcha") ||
-                         meal.name.toLowerCase().includes("bento");
+                         meal.name.toLowerCase().includes("ramen");
     });
 
     // Add filter event listeners
@@ -135,9 +92,9 @@ document.getElementById('nutrientForm').addEventListener('submit', function(e) {
     document.getElementById('chineseFilter').addEventListener('change', filterMeals);
     document.getElementById('indianFilter').addEventListener('change', filterMeals);
     document.getElementById('italianFilter').addEventListener('change', filterMeals);
+    document.getElementById('japaneseFilter').addEventListener('change', filterMeals);
     document.getElementById('mediterraneanFilter').addEventListener('change', filterMeals);
     document.getElementById('mexicanFilter').addEventListener('change', filterMeals);
-    document.getElementById('japaneseFilter').addEventListener('change', filterMeals);
 
     // Function to filter meals based on selected filter
     function filterMeals() {
@@ -162,33 +119,37 @@ document.getElementById('nutrientForm').addEventListener('submit', function(e) {
         // Filter the meals by diet type
         let filteredMeals = suggestedMeals;
         
-        if (showVegetarian) {
-            filteredMeals = filteredMeals.filter(meal => meal.isVegetarian && !meal.isVegan);
-        } else if (showNonVegetarian) {
-            filteredMeals = filteredMeals.filter(meal => !meal.isVegetarian);
-        } else if (showVegan) {
-            filteredMeals = filteredMeals.filter(meal => meal.isVegan);
-        } else if (showLiquid) {
-            filteredMeals = filteredMeals.filter(meal => meal.isLiquid);
+        if (!showAll) {
+            if (showVegetarian) {
+                filteredMeals = filteredMeals.filter(meal => meal.isVegetarian && !meal.isVegan);
+            } else if (showNonVegetarian) {
+                filteredMeals = filteredMeals.filter(meal => !meal.isVegetarian);
+            } else if (showVegan) {
+                filteredMeals = filteredMeals.filter(meal => meal.isVegan);
+            } else if (showLiquid) {
+                filteredMeals = filteredMeals.filter(meal => meal.isLiquid);
+            }
         }
         
         // Further filter by cuisine type
-        if (showAmerican) {
-            filteredMeals = filteredMeals.filter(meal => meal.isAmerican);
-        } else if (showAsian) {
-            filteredMeals = filteredMeals.filter(meal => meal.isAsian);
-        } else if (showChinese) {
-            filteredMeals = filteredMeals.filter(meal => meal.isChinese);
-        } else if (showIndian) {
-            filteredMeals = filteredMeals.filter(meal => meal.isIndian);
-        } else if (showItalian) {
-            filteredMeals = filteredMeals.filter(meal => meal.isItalian);
-        } else if (showJapanese) {
-            filteredMeals = filteredMeals.filter(meal => meal.isJapanese);
-        } else if (showMediterranean) {
-            filteredMeals = filteredMeals.filter(meal => meal.isMediterranean);
-        } else if (showMexican) {
-            filteredMeals = filteredMeals.filter(meal => meal.isMexican);
+        if (!showAllCuisines) {
+            if (showAmerican) {
+                filteredMeals = filteredMeals.filter(meal => meal.isAmerican);
+            } else if (showAsian) {
+                filteredMeals = filteredMeals.filter(meal => meal.isAsian);
+            } else if (showChinese) {
+                filteredMeals = filteredMeals.filter(meal => meal.isChinese);
+            } else if (showIndian) {
+                filteredMeals = filteredMeals.filter(meal => meal.isIndian);
+            } else if (showItalian) {
+                filteredMeals = filteredMeals.filter(meal => meal.isItalian);
+            } else if (showJapanese) {
+                filteredMeals = filteredMeals.filter(meal => meal.isJapanese);
+            } else if (showMediterranean) {
+                filteredMeals = filteredMeals.filter(meal => meal.isMediterranean);
+            } else if (showMexican) {
+                filteredMeals = filteredMeals.filter(meal => meal.isMexican);
+            }
         }
         
         // Display the filtered meals
@@ -206,7 +167,7 @@ document.getElementById('nutrientForm').addEventListener('submit', function(e) {
         }
         
         // Pagination variables
-        const mealsPerPage = 8; // Changed from 9 to 8
+        const mealsPerPage = 8;
         let currentPage = 1;
         const totalPages = Math.ceil(mealsToDisplay.length / mealsPerPage);
         
@@ -425,6 +386,7 @@ document.getElementById('nutrientForm').addEventListener('submit', function(e) {
 
     // Reset filter to "All Meals"
     document.getElementById('allMealsFilter').checked = true;
+    document.getElementById('allCuisinesFilter').checked = true;
 
     // Display the meals
     displayMeals(suggestedMeals);
