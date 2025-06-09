@@ -279,6 +279,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 mealHTML += `</ul>`;
                 
+                // Add save meal button
+                mealHTML += `<button class="save-meal-btn" data-meal='${JSON.stringify(meal)}'>Save Meal</button>`;
+                
                 mealCard.innerHTML = mealHTML;
                 mealContainer.appendChild(mealCard);
             });
@@ -331,5 +334,130 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Show first page initially
         showPage(currentPage);
+        
+        // Add event listeners to save meal buttons
+        document.querySelectorAll('.save-meal-btn').forEach(button => {
+            button.addEventListener('click', saveMealToFirebase);
+        });
+    }
+    
+    function saveMealToFirebase(event) {
+        console.log("Save meal button clicked");
+        
+        // Get the meal data from the button's data attribute
+        const mealData = JSON.parse(event.target.getAttribute('data-meal'));
+        console.log("Meal data to save:", mealData);
+        
+        // Check if user is logged in (not guest)
+        const userName = localStorage.getItem('userName');
+        const userEmail = localStorage.getItem('userEmail');
+        const isGuest = userName === 'Guest' && userEmail === 'guest@example.com';
+        
+        if (isGuest) {
+            alert("Please log in to save meals to your account.");
+            return;
+        }
+        
+        // Import Firebase modules
+        import('https://www.gstatic.com/firebasejs/11.9.0/firebase-app.js').then((firebaseApp) => {
+            import('https://www.gstatic.com/firebasejs/11.9.0/firebase-auth.js').then((firebaseAuth) => {
+                import('https://www.gstatic.com/firebasejs/11.9.0/firebase-firestore.js').then((firebaseFirestore) => {
+                    // Initialize Firebase
+                    const firebaseConfig = {
+                        apiKey: "AIzaSyARSa7Bs-0g55DBhi2EQvJ32BHlszCv8WY",
+                        authDomain: "daily-meal-planner-f96db.firebaseapp.com",
+                        projectId: "daily-meal-planner-f96db",
+                        storageBucket: "daily-meal-planner-f96db.firebasestorage.app",
+                        messagingSenderId: "494913060879",
+                        appId: "1:494913060879:web:7c346a989ca633f33b237a"
+                    };
+                    
+                    // Check if Firebase is already initialized
+                    let app;
+                    try {
+                        app = firebaseApp.getApp();
+                    } catch (error) {
+                        app = firebaseApp.initializeApp(firebaseConfig);
+                    }
+                    
+                    const auth = firebaseAuth.getAuth(app);
+                    const db = firebaseFirestore.getFirestore(app);
+                    
+                    // Get current user
+                    const user = auth.currentUser;
+                    console.log("Current user:", user ? user.uid : "No user");
+                    
+                    if (user) {
+                        // Save meal to user's saved meals collection
+                        const userMealsRef = firebaseFirestore.collection(db, "users", user.uid, "savedMeals");
+                        
+                        // Clean the meal data to ensure it's Firestore-compatible
+                        const cleanedMealData = JSON.parse(JSON.stringify(mealData));
+                        
+                        // Add meal with timestamp
+                        firebaseFirestore.addDoc(userMealsRef, {
+                            ...cleanedMealData,
+                            savedAt: new Date().toISOString()
+                        })
+                        .then(() => {
+                            alert("Meal saved successfully!");
+                            event.target.textContent = "Saved!";
+                            event.target.disabled = true;
+                        })
+                        .catch(error => {
+                            console.error("Error saving meal:", error);
+                            alert("Failed to save meal: " + error.message);
+                        });
+                    } else {
+                        // If auth.currentUser is null but we have localStorage data, try to save with user ID from localStorage
+                        const userEmail = localStorage.getItem('userEmail');
+                        if (userEmail && userEmail !== 'guest@example.com') {
+                            console.log("User not immediately available, waiting for auth state change");
+                            // We need to get the user ID from Firebase Auth
+                            const unsubscribe = firebaseAuth.onAuthStateChanged(auth, (user) => {
+                                unsubscribe(); // Unsubscribe after first callback
+                                
+                                if (user) {
+                                    console.log("User found after auth state change:", user.uid);
+                                    // Now we have the user, save the meal
+                                    const userMealsRef = firebaseFirestore.collection(db, "users", user.uid, "savedMeals");
+                                    
+                                    // Clean the meal data to ensure it's Firestore-compatible
+                                    const cleanedMealData = JSON.parse(JSON.stringify(mealData));
+                                    
+                                    firebaseFirestore.addDoc(userMealsRef, {
+                                        ...cleanedMealData,
+                                        savedAt: new Date().toISOString()
+                                    })
+                                    .then(() => {
+                                        alert("Meal saved successfully!");
+                                        event.target.textContent = "Saved!";
+                                        event.target.disabled = true;
+                                    })
+                                    .catch(error => {
+                                        console.error("Error saving meal:", error);
+                                        alert("Failed to save meal: " + error.message);
+                                    });
+                                } else {
+                                    console.log("No user found after auth state change");
+                                    alert("Please log in to save meals to your account.");
+                                }
+                            });
+                        } else {
+                            alert("Please log in to save meals to your account.");
+                        }
+                    }
+                }).catch(error => {
+                    console.error("Error importing Firestore:", error);
+                    alert("Failed to load Firebase Firestore module: " + error.message);
+                });
+            }).catch(error => {
+                console.error("Error importing Auth:", error);
+                alert("Failed to load Firebase Auth module: " + error.message);
+            });
+        }).catch(error => {
+            console.error("Error importing Firebase app:", error);
+            alert("Failed to load Firebase App module: " + error.message);
+        });
     }
 });

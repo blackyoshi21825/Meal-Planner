@@ -445,3 +445,88 @@ form button:active {
     color: #666;
     font-style: italic;
 }
+
+/* Save Meal Button */
+.save-meal-btn {
+    background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    font-weight: bold;
+}
+
+.save-meal-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    background: linear-gradient(135deg, #7d3c98 0%, #8e44ad 100%);
+}
+
+.save-meal-btn:disabled {
+    background: #cccccc;
+    cursor: not-allowed;
+}
+
+/* Navigation buttons */
+.nav-buttons {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.nav-btn {
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+}
+
+.nav-btn.active {
+    background-color: #2c3e50;
+}
+
+/* Saved meals specific styles */
+.saved-date {
+    font-size: 0.8em;
+    color: #777;
+    font-style: italic;
+    margin-top: -5px;
+    margin-bottom: 10px;
+}
+
+.remove-meal-btn {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    font-weight: bold;
+}
+
+.remove-meal-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+}
+
+.loading-spinner {
+    text-align: center;
+    padding: 20px;
+    color: #777;
+}

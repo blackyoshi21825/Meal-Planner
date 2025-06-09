@@ -35,9 +35,14 @@
             <p>Welcome, <span id="userName">User</span>!</p>
             <div class="user-buttons">
                 <button id="logoutBtn" class="logout-btn">Logout</button>
-                <!-- Login button removed -->     
             </div>
         </div>
+        
+        <div class="nav-buttons">
+            <a href="index.html" class="nav-btn active">Home</a>
+            <a href="saved-meals.html" class="nav-btn">Saved Meals</a>
+        </div>
+        
         <p>Enter your daily nutritional values and get suggested meals.</p>
 
         <!-- Nutrient Input Form -->
@@ -96,25 +101,34 @@
 
         // Check if user is logged in
         onAuthStateChanged(auth, (user) => {
-            console.log("Auth state changed:", user ? "User logged in" : "No user"); // Debug log
-            
             const userInfo = document.getElementById('userInfo');
             const userName = document.getElementById('userName');
             
             if (user) {
                 // User is signed in
-                console.log("User ID:", user.uid); // Debug log
+                console.log("User is signed in:", user.uid);
                 userInfo.style.display = 'flex';
-                
-                // Get user name from localStorage or use displayName from Firebase
                 const storedName = localStorage.getItem('userName');
-                console.log("Stored name:", storedName); // Debug log
-                
                 userName.textContent = storedName || user.displayName || user.email;
-                console.log("Displaying name:", userName.textContent); // Debug log
+                
+                // Ensure localStorage has isLoggedIn flag set
+                localStorage.setItem('isLoggedIn', 'true');
             } else {
-                // User is signed out
-                userInfo.style.display = 'none';
+                // Check if we're in guest mode
+                const storedName = localStorage.getItem('userName');
+                const storedEmail = localStorage.getItem('userEmail');
+                const isGuest = storedName === 'Guest' && storedEmail === 'guest@example.com';
+                
+                if (isGuest) {
+                    console.log("User is in guest mode");
+                    userInfo.style.display = 'flex';
+                    userName.textContent = 'Guest';
+                } else {
+                    // User is not authenticated and not in guest mode
+                    console.log("User is not authenticated");
+                    userInfo.style.display = 'none';
+                    window.location.href = 'login.html';
+                }
             }
         });
 
