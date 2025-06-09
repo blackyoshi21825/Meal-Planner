@@ -5,10 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meal Planner</title>
     <link rel="stylesheet" href="styles.css">
+    <script>
+        // Immediately check if user is authenticated
+        (function() {
+            // Check if user is coming directly to index.html without authentication
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            const hasUserData = localStorage.getItem('userName') && localStorage.getItem('userEmail');
+            
+            console.log("Auth check - isLoggedIn:", isLoggedIn, "hasUserData:", hasUserData);
+            
+            if (!isLoggedIn || !hasUserData) {
+                console.log("No valid authentication found, redirecting to login page");
+                // Clear any potentially incomplete auth data
+                localStorage.removeItem('userName');
+                localStorage.removeItem('userEmail');
+                localStorage.removeItem('isLoggedIn');
+                // Redirect to login page
+                window.location.replace('login.html');
+            } else {
+                console.log("User authenticated:", localStorage.getItem('userName'));
+            }
+        })();
+    </script>
 </head>
 <body>
     <div class="container">
         <h1>Daily Meal Planner</h1>
+        <div id="userInfo" class="user-info" style="display: none;">
+            <p>Welcome, <span id="userName">User</span>!</p>
+            <div class="user-buttons">
+                <button id="logoutBtn" class="logout-btn">Logout</button>
+                <button id="loginBtn" class="login-btn">Login/Register</button>
+            </div>
+        </div>
         <p>Enter your daily nutritional values and get suggested meals.</p>
 
         <!-- Nutrient Input Form -->
@@ -70,5 +99,119 @@
     <div id="footer">
         @2025 Daily Meal Planner Inc.
     </div>
+    <script type="module">
+        // Import Firebase auth
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-app.js";
+        import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-auth.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyARSa7Bs-0g55DBhi2EQvJ32BHlszCv8WY",
+            authDomain: "daily-meal-planner-f96db.firebaseapp.com",
+            projectId: "daily-meal-planner-f96db",
+            storageBucket: "daily-meal-planner-f96db.firebasestorage.app",
+            messagingSenderId: "494913060879",
+            appId: "1:494913060879:web:7c346a989ca633f33b237a"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        console.log("Checking authentication state..."); // Debug log
+
+        // Check if user is logged in
+        onAuthStateChanged(auth, (user) => {
+            console.log("Auth state changed:", user ? "User logged in" : "No user"); // Debug log
+            
+            const userInfo = document.getElementById('userInfo');
+            const userName = document.getElementById('userName');
+            
+            if (user) {
+                // User is signed in
+                console.log("User ID:", user.uid); // Debug log
+                userInfo.style.display = 'flex';
+                
+                // Get user name from localStorage or use displayName from Firebase
+                const storedName = localStorage.getItem('userName');
+                console.log("Stored name:", storedName); // Debug log
+                
+                userName.textContent = storedName || user.displayName || user.email;
+                console.log("Displaying name:", userName.textContent); // Debug log
+            } else {
+                // User is signed out
+                userInfo.style.display = 'none';
+            }
+        });
+
+        // Handle logout
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            try {
+                console.log("Logging out..."); // Debug log
+                await signOut(auth);
+                localStorage.removeItem('userName');
+                localStorage.removeItem('userEmail');
+                window.location.href = 'login.html';
+            } catch (error) {
+                console.error("Error signing out:", error);
+            }
+        });
+
+        // Check if we were redirected from login
+        window.addEventListener('load', () => {
+            console.log("Page loaded"); // Debug log
+            const userName = localStorage.getItem('userName');
+            if (userName) {
+                console.log("User name found in localStorage:", userName); // Debug log
+            }
+        });
+    </script>
+    <style>
+        .user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .user-info p {
+            margin: 0;
+            font-weight: bold;
+        }
+        
+        .user-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .logout-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .logout-btn:hover {
+            background-color: #c0392b;
+        }
+        
+        .login-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .login-btn:hover {
+            background-color: #2980b9;
+        }
+    </style>
 </body>
 </html>

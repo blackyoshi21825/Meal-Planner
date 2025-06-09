@@ -1,3 +1,20 @@
+
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-app.js";
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyARSa7Bs-0g55DBhi2EQvJ32BHlszCv8WY",
+    authDomain: "daily-meal-planner-f96db.firebaseapp.com",
+    projectId: "daily-meal-planner-f96db",
+    storageBucket: "daily-meal-planner-f96db.firebasestorage.app",
+    messagingSenderId: "494913060879",
+    appId: "1:494913060879:web:7c346a989ca633f33b237a"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+
 document.getElementById('nutrientForm').addEventListener('submit', function(e) {
     e.preventDefault();
 
