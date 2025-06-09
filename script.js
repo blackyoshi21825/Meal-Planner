@@ -115,6 +115,7 @@ document.getElementById('nutrientForm').addEventListener('submit', function(e) {
                               meal.name.toLowerCase().includes("pastitsio") ||
                               meal.name.toLowerCase().includes("souvlaki") ||
                               meal.name.toLowerCase().includes("avgolemono") ||
+                              meal.name.toLowerCase().includes("tahini") ||
                               meal.name.toLowerCase().includes("imam bayildi");
                           
         meal.isMexican = meal.name.toLowerCase().includes("taco") || 
