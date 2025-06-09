@@ -392,3 +392,143 @@ document.getElementById('nutrientForm').addEventListener('submit', function(e) {
     // Display the meals
     displayMeals(suggestedMeals);
 });
+
+// Enhanced meal combination suggestion function
+function suggestMealCombinations(meal) {
+    // Get complementary meals with more sophisticated criteria
+    const complementaryMeals = meals.filter(otherMeal => {
+        // Don't suggest the same meal
+        if (otherMeal.name === meal.name) return false;
+        
+        // Nutritional balance criteria
+        const needsMoreProtein = meal.protein < 10 && otherMeal.protein > 15;
+        const needsMoreFiber = meal.fiber < 4 && otherMeal.fiber > 6;
+        const balancedCalories = meal.calories + otherMeal.calories < 600; // Keep total calories reasonable
+        const complementaryFat = meal.fat > 10 ? otherMeal.fat < 8 : otherMeal.fat > 5; // Balance fat content
+        const vitaminBoost = meal.vitamins < 30 && otherMeal.vitamins > 40; // Boost vitamin content
+        
+        // Meal type complementary criteria
+        const liquidWithSolid = meal.isLiquid && !otherMeal.isLiquid; // Pair liquid with solid
+        const veganWithProtein = meal.isVegan && otherMeal.protein > 20 && !otherMeal.isVegan; // Balance vegan meals with protein
+        
+        // Cuisine variety - don't pair same cuisine
+        const differentCuisine = 
+            (meal.isAsian && !otherMeal.isAsian) ||
+            (meal.isAmerican && !otherMeal.isAmerican) ||
+            (meal.isItalian && !otherMeal.isItalian) ||
+            (meal.isMediterranean && !otherMeal.isMediterranean) ||
+            (meal.isIndian && !otherMeal.isIndian) ||
+            (meal.isMexican && !otherMeal.isMexican) ||
+            (meal.isJapanese && !otherMeal.isJapanese) ||
+            (meal.isChinese && !otherMeal.isChinese);
+            
+        // Calculate a "complementary score" based on multiple factors
+        let score = 0;
+        if (needsMoreProtein) score += 2;
+        if (needsMoreFiber) score += 2;
+        if (balancedCalories) score += 1;
+        if (complementaryFat) score += 1;
+        if (vitaminBoost) score += 2;
+        if (liquidWithSolid) score += 3;
+        if (veganWithProtein) score += 3;
+        if (differentCuisine) score += 2;
+        
+        // Only suggest meals with a good complementary score
+        otherMeal.complementaryScore = score;
+        return score >= 3;
+    });
+    
+    // Sort by complementary score
+    complementaryMeals.sort((a, b) => b.complementaryScore - a.complementaryScore);
+    
+    // Return top suggestions
+    return complementaryMeals.slice(0, 3);
+}
+
+// Enhanced function to show suggestions with different reasons
+function showSuggestions(button, mealName) {
+    const suggestionsContainer = button.nextElementSibling;
+    
+    // Toggle display
+    if (suggestionsContainer.style.display === 'none') {
+        // Find the meal
+        const selectedMeal = meals.find(meal => meal.name === mealName);
+        if (!selectedMeal) return;
+        
+        // Get suggestions
+        const suggestions = suggestMealCombinations(selectedMeal);
+        
+        // Display suggestions
+        if (suggestions.length === 0) {
+            suggestionsContainer.innerHTML = '<p>No complementary meals found.</p>';
+        } else {
+            let suggestionsHTML = '<h4>Suggested Combinations:</h4><ul class="suggestions-list">';
+            
+            // Track used reasons to avoid repetition
+            const usedReasons = new Set();
+            
+            suggestions.forEach((suggestion, index) => {
+                // Generate all possible reasons for this suggestion
+                const possibleReasons = [];
+                
+                if (selectedMeal.protein < 10 && suggestion.protein > 15) {
+                    possibleReasons.push("adds protein");
+                }
+                if (selectedMeal.fiber < 4 && suggestion.fiber > 6) {
+                    possibleReasons.push("adds fiber");
+                }
+                if (selectedMeal.isLiquid && !suggestion.isLiquid) {
+                    possibleReasons.push("pairs liquid with solid");
+                }
+                if (selectedMeal.vitamins < 30 && suggestion.vitamins > 40) {
+                    possibleReasons.push("boosts vitamins");
+                }
+                if (selectedMeal.isVegan && suggestion.protein > 20 && !suggestion.isVegan) {
+                    possibleReasons.push("complements vegan meal with protein");
+                }
+                if (selectedMeal.fat > 10 && suggestion.fat < 8) {
+                    possibleReasons.push("balances fat content");
+                }
+                if (selectedMeal.calories + suggestion.calories < 500) {
+                    possibleReasons.push("keeps total calories in check");
+                }
+                if (selectedMeal.sugar > 10 && suggestion.sugar < 5) {
+                    possibleReasons.push("balances sugar content");
+                }
+                
+                // If no specific reasons, add a generic one
+                if (possibleReasons.length === 0) {
+                    possibleReasons.push("balances overall nutrition");
+                }
+                
+                // Find a reason that hasn't been used yet
+                let reason = "balances nutrition";
+                for (const possibleReason of possibleReasons) {
+                    if (!usedReasons.has(possibleReason)) {
+                        reason = possibleReason;
+                        usedReasons.add(possibleReason);
+                        break;
+                    }
+                }
+                
+                // If all reasons have been used, just use the first one
+                if (reason === "balances nutrition" && possibleReasons.length > 0) {
+                    reason = possibleReasons[0];
+                }
+                
+                suggestionsHTML += `<li>${suggestion.name} 
+                    <span class="suggestion-reason">(${reason})</span>
+                </li>`;
+            });
+            
+            suggestionsHTML += '</ul>';
+            suggestionsContainer.innerHTML = suggestionsHTML;
+        }
+        
+        suggestionsContainer.style.display = 'block';
+        button.textContent = 'Hide Suggestions';
+    } else {
+        suggestionsContainer.style.display = 'none';
+        button.textContent = 'Suggest Combinations';
+    }
+}
