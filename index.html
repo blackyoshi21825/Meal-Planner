@@ -41,7 +41,7 @@
         <p>Enter your daily nutritional values and get suggested meals.</p>
 
         <!-- Nutrient Input Form -->
-        <form id="nutrientForm">
+        <form id="nutrientForm" onsubmit="return false;">
             <label for="fiber">Fiber (1-10 g):</label>
             <input type="number" id="fiber" required>
 
@@ -60,7 +60,7 @@
             <label for="vitamins">Vitamins (35-120% Daily Value):</label>
             <input type="number" id="vitamins" required>
 
-            <button type="submit">Get Meals</button>
+            <button type="button" id="getMealsBtn">Get Meals</button>
         </form>
 
         <div class="filter-options">
@@ -94,8 +94,8 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
     <script src="meals.js"></script>
+    <script src="meal-filter.js"></script>
     <div id="footer">
         @2025 Daily Meal Planner Inc.
     </div>
@@ -213,5 +213,33 @@
             background-color: #2980b9;
         }
     </style>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add click event listener to the button
+    document.getElementById('getMealsBtn').addEventListener('click', function() {
+        console.log("Get Meals button clicked");
+        
+        // Get form values
+        const fiber = parseFloat(document.getElementById('fiber').value);
+        const calories = parseFloat(document.getElementById('calories').value);
+        const protein = parseFloat(document.getElementById('protein').value);
+        const sugar = parseFloat(document.getElementById('sugar').value);
+        const fat = parseFloat(document.getElementById('fat').value);
+        const vitamins = parseFloat(document.getElementById('vitamins').value);
+        
+        console.log("Input values:", { fiber, calories, protein, sugar, fat, vitamins });
+        
+        // Check if all fields are filled
+        if (isNaN(fiber) || isNaN(calories) || isNaN(protein) || 
+            isNaN(sugar) || isNaN(fat) || isNaN(vitamins)) {
+            alert("Please fill in all fields with valid numbers");
+            return;
+        }
+        
+        // Call the processing function
+        processMealSuggestions(fiber, calories, protein, sugar, fat, vitamins);
+    });
+});
+</script>
 </body>
 </html>
