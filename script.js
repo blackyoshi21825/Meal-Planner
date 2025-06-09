@@ -18,7 +18,13 @@ document.getElementById('nutrientForm').addEventListener('submit', function(e) {
                             !meal.name.toLowerCase().includes("salmon") && 
                             !meal.name.toLowerCase().includes("tuna") && 
                             !meal.name.toLowerCase().includes("shrimp") && 
-                            !meal.name.toLowerCase().includes("cod");
+                            !meal.name.toLowerCase().includes("cod") &&
+                            !meal.name.toLowerCase().includes("pork") &&
+                            !meal.name.toLowerCase().includes("lamb") &&
+                            !meal.name.toLowerCase().includes("goat") &&
+                            !meal.name.toLowerCase().includes("katsu") &&
+                            !meal.name.toLowerCase().includes("sashimi") &&
+                            !meal.name.toLowerCase().includes("tandoori");
         
         // Determine if meal is vegan (no animal products)
         meal.isVegan = meal.isVegetarian && 
@@ -52,16 +58,64 @@ document.getElementById('nutrientForm').addEventListener('submit', function(e) {
                         meal.name.toLowerCase().includes("soy sauce") ||
                         meal.name.toLowerCase().includes("noodle");
                     
+        // Indian cuisine detection - enhanced
         meal.isIndian = meal.name.toLowerCase().includes("curry") || 
                        meal.name.toLowerCase().includes("masala") ||
                        meal.name.toLowerCase().includes("tikka") ||
                        meal.name.toLowerCase().includes("lentil") ||
-                       meal.name.toLowerCase().includes("chutney");
+                       meal.name.toLowerCase().includes("chutney") ||
+                       meal.name.toLowerCase().includes("paneer") ||
+                       meal.name.toLowerCase().includes("biryani") ||
+                       meal.name.toLowerCase().includes("naan") ||
+                       meal.name.toLowerCase().includes("dal") ||
+                       meal.name.toLowerCase().includes("aloo") ||
+                       meal.name.toLowerCase().includes("samosa") ||
+                       meal.name.toLowerCase().includes("tandoori") ||
+                       meal.name.toLowerCase().includes("rogan josh") ||
+                       meal.name.toLowerCase().includes("malai kofta") ||
+                       meal.name.toLowerCase().includes("baingan bharta") ||
+                       meal.name.toLowerCase().includes("dhokla") ||
+                       meal.name.toLowerCase().includes("pav bhaji");
                   
+        // Japanese cuisine detection - enhanced
+        meal.isJapanese = meal.name.toLowerCase().includes("sushi") || 
+                         meal.name.toLowerCase().includes("miso") ||
+                         meal.name.toLowerCase().includes("teriyaki") ||
+                         meal.name.toLowerCase().includes("ramen") ||
+                         meal.name.toLowerCase().includes("tempura") ||
+                         meal.name.toLowerCase().includes("soba") ||
+                         meal.name.toLowerCase().includes("okonomiyaki") ||
+                         meal.name.toLowerCase().includes("onigiri") ||
+                         meal.name.toLowerCase().includes("katsu") ||
+                         meal.name.toLowerCase().includes("chirashi") ||
+                         meal.name.toLowerCase().includes("sashimi") ||
+                         meal.name.toLowerCase().includes("bonito") ||
+                         meal.name.toLowerCase().includes("tonkatsu") ||
+                         meal.name.toLowerCase().includes("oyakodon") ||
+                         meal.name.toLowerCase().includes("udon") ||
+                         meal.name.toLowerCase().includes("tamagoyaki") ||
+                         meal.name.toLowerCase().includes("yakitori") ||
+                         meal.name.toLowerCase().includes("dashi");
+                         
+        // Mediterranean cuisine detection - enhanced
         meal.isMediterranean = meal.name.toLowerCase().includes("olive oil") || 
                               meal.name.toLowerCase().includes("feta") ||
                               meal.name.toLowerCase().includes("hummus") ||
-                              meal.name.toLowerCase().includes("greek");
+                              meal.name.toLowerCase().includes("greek") ||
+                              meal.name.toLowerCase().includes("tabbouleh") ||
+                              meal.name.toLowerCase().includes("falafel") ||
+                              meal.name.toLowerCase().includes("halloumi") ||
+                              meal.name.toLowerCase().includes("shakshuka") ||
+                              meal.name.toLowerCase().includes("spanakopita") ||
+                              meal.name.toLowerCase().includes("moussaka") ||
+                              meal.name.toLowerCase().includes("mezze") ||
+                              meal.name.toLowerCase().includes("baba ganoush") ||
+                              meal.name.toLowerCase().includes("olives") ||
+                              meal.name.toLowerCase().includes("dolmas") ||
+                              meal.name.toLowerCase().includes("pastitsio") ||
+                              meal.name.toLowerCase().includes("souvlaki") ||
+                              meal.name.toLowerCase().includes("avgolemono") ||
+                              meal.name.toLowerCase().includes("imam bayildi");
                           
         meal.isMexican = meal.name.toLowerCase().includes("taco") || 
                         meal.name.toLowerCase().includes("burrito") ||
