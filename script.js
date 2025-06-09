@@ -126,6 +126,7 @@ document.getElementById('nutrientForm').addEventListener('submit', function(e) {
         meal.isItalian = meal.name.toLowerCase().includes("pasta") || 
                         meal.name.toLowerCase().includes("pizza") ||
                         meal.name.toLowerCase().includes("parmesan") ||
+                        meal.name.toLowerCase().includes("risotto") ||
                         meal.name.toLowerCase().includes("mozzarella");
 
         meal.isJapanese = meal.name.toLowerCase().includes("sushi") || 
