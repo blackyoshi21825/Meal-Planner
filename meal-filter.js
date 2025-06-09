@@ -108,15 +108,13 @@ document.addEventListener('DOMContentLoaded', function() {
                              mealName.includes("toast") ||
                              mealName.includes("pancake");
             
-            processedMeal.isAsian = mealName.includes("stir fry") || 
-                          mealName.includes("curry") ||
-                          mealName.includes("soy sauce") ||
-                          mealName.includes("rice") ||
-                          mealName.includes("noodle");
             
             processedMeal.isChinese = mealName.includes("stir fry") || 
                             mealName.includes("fried rice") ||
                             mealName.includes("soy sauce") ||
+                            mealName.includes("chow mein") ||
+                            mealName.includes("wonton") ||
+                            mealName.includes("dim sum") ||
                             mealName.includes("noodle");
             
             processedMeal.isIndian = mealName.includes("curry") || 
@@ -124,18 +122,28 @@ document.addEventListener('DOMContentLoaded', function() {
                            mealName.includes("tikka") ||
                            mealName.includes("lentil") ||
                            mealName.includes("paneer") ||
+                           mealName.includes("pav bhaji") ||
+                           mealName.includes("malai kofta") ||
                            mealName.includes("biryani");
             
             processedMeal.isJapanese = mealName.includes("sushi") || 
                              mealName.includes("miso") ||
                              mealName.includes("teriyaki") ||
                              mealName.includes("ramen") ||
+                             mealName.includes("udon") ||
+                             mealName.includes("soba") ||
+                             mealName.includes("gyoza") ||
                              mealName.includes("tempura");
             
             processedMeal.isMediterranean = mealName.includes("olive oil") || 
                                   mealName.includes("feta") ||
                                   mealName.includes("hummus") ||
                                   mealName.includes("greek") ||
+                                  mealName.includes("tahini") ||
+                                  mealName.includes("tabbouleh") ||
+                                  mealName.includes("spanakopita") ||
+                                  mealName.includes("moussaka") ||
+                                  mealName.includes("mezze") ||
                                   mealName.includes("falafel");
             
             processedMeal.isMexican = mealName.includes("taco") || 
@@ -146,6 +154,14 @@ document.addEventListener('DOMContentLoaded', function() {
             processedMeal.isItalian = mealName.includes("pasta") || 
                             mealName.includes("pizza") ||
                             mealName.includes("parmesan") ||
+                            mealName.includes("mozzarella") ||
+                            mealName.includes("lasagna") ||
+                            mealName.includes("spaghetti") ||
+                            mealName.includes("marinara") ||
+                            mealName.includes("pesto") ||
+                            mealName.includes("gnocchi") ||
+                            mealName.includes("ravioli") ||
+                            mealName.includes("cannelloni") ||
                             mealName.includes("risotto");
             
             return processedMeal;
