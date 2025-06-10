@@ -221,8 +221,8 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        // Call the processing function
-        processMealSuggestions(fiber, calories, protein, sugar, fat, vitamins);
+        // Call the correct function from meal-filter.js
+        filterAndDisplayMeals(fiber, calories, protein, sugar, fat, vitamins);
     });
 });
 </script>
