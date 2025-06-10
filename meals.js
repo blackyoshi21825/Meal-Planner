@@ -46,7 +46,6 @@ const meals = [
         { name: "Lemon Garlic Shrimp", fiber: 1, calories: 210, protein: 25, sugar: 1, fat: 7, vitamins: 20, ingredients: { "Shrimp (g)": 120, "Garlic (g)": 10, "Lemon juice (g)": 10 }},
         { name: "Hearty Lentil Soup", fiber: 8, calories: 230, protein: 14, sugar: 3, fat: 4, vitamins: 45, ingredients: { "Lentils (g)": 100, "Carrot (g)": 70, "Onion (g)": 40 }},
         { name: "Zesty Turkey Wrap", fiber: 4, calories: 280, protein: 27, sugar: 2, fat: 9, vitamins: 25, ingredients: { "Turkey breast (g)": 120, "Whole wheat wrap (g)": 60, "Spinach (g)": 30 }},
-        { name: "Creamy Avocado Pasta", fiber: 5, calories: 300, protein: 8, sugar: 3, fat: 15, vitamins: 40, ingredients: { "Pasta (g)": 100, "Avocado (g)": 70, "Parmesan (g)": 30 }},
         { name: "Sweet Potato Toasties", fiber: 6, calories: 240, protein: 6, sugar: 6, fat: 5, vitamins: 100, ingredients: { "Sweet potato (g)": 150, "Almond butter (g)": 20, "Chia seeds (g)": 15 }},
         { name: "Garlic Herb Chicken", fiber: 2, calories: 310, protein: 33, sugar: 1, fat: 14, vitamins: 25, ingredients: { "Chicken breast (g)": 150, "Garlic (g)": 10, "Rosemary (g)": 5 }},
         { name: "Spicy Turkey Skillet", fiber: 3, calories: 320, protein: 30, sugar: 2, fat: 16, vitamins: 35, ingredients: { "Ground turkey (g)": 150, "Bell pepper (g)": 100, "Olive oil (g)": 10 }},
