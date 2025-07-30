@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social - Meal Planner</title>
+    <link rel="icon" href="logo.jpeg" type="image/jpeg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Social Feed</h1>
+        <div id="userInfo" class="user-info" style="display: none;">
+            <p>Welcome, <span id="userName">User</span>!</p>
+            <div class="user-buttons">
+                <button id="logoutBtn" class="logout-btn">Logout</button>
+            </div>
+        </div>
+        
+        <div class="nav-buttons">
+            <a href="index.html" class="nav-btn">Home</a>
+            <a href="saved-meals.html" class="nav-btn">Saved Meals</a>
+            <a href="social.html" class="nav-btn active">Social</a>
+        </div>
+
+        <div class="social-tabs">
+            <button class="tab-btn active" data-tab="feed">Community Feed</button>
+            <button class="tab-btn" data-tab="share">Share Meal</button>
+        </div>
+
+        <div id="feedTab" class="tab-content active">
+            <div id="socialFeed" class="social-feed">
+                <div class="loading-spinner">Loading community meals...</div>
+            </div>
+        </div>
+
+        <div id="shareTab" class="tab-content">
+            <div class="share-meal-form">
+                <h3>Share a Meal with the Community</h3>
+                <form id="shareMealForm">
+                    <label for="mealSelect">Select a saved meal to share:</label>
+                    <select id="mealSelect" required>
+                        <option value="">Loading your meals...</option>
+                    </select>
+                    
+                    <label for="shareComment">Add a comment (optional):</label>
+                    <textarea id="shareComment" placeholder="Tell the community about this meal..."></textarea>
+                    
+                    <label for="shareRating">Rate this meal:</label>
+                    <div class="rating-input">
+                        <span class="star" data-rating="1">★</span>
+                        <span class="star" data-rating="2">★</span>
+                        <span class="star" data-rating="3">★</span>
+                        <span class="star" data-rating="4">★</span>
+                        <span class="star" data-rating="5">★</span>
+                    </div>
+                    <input type="hidden" id="shareRating" value="5">
+                    
+                    <button type="submit">Share Meal</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-auth.js";
+        import { getFirestore, collection, getDocs, addDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyARSa7Bs-0g55DBhi2EQvJ32BHlszCv8WY",
+            authDomain: "daily-meal-planner-f96db.firebaseapp.com",
+            projectId: "daily-meal-planner-f96db",
+            storageBucket: "daily-meal-planner-f96db.firebasestorage.app",
+            messagingSenderId: "494913060879",
+            appId: "1:494913060879:web:7c346a989ca633f33b237a"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+
+        // Auth state
+        onAuthStateChanged(auth, (user) => {
+            const userInfo = document.getElementById('userInfo');
+            const userName = document.getElementById('userName');
+            
+            if (user) {
+                currentUser = user;
+                userInfo.style.display = 'flex';
+                userName.textContent = localStorage.getItem('userName') || user.email;
+                loadSocialFeed();
+                loadUserMeals();
+            } else {
+                const storedName = localStorage.getItem('userName');
+                if (storedName === 'Guest') {
+                    userInfo.style.display = 'flex';
+                    userName.textContent = 'Guest';
+                    loadSocialFeed();
+                } else {
+                    window.location.href = 'login.html';
+                }
+            }
+        });
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await signOut(auth);
+            localStorage.clear();
+            window.location.href = 'login.html';
+        });
+
+        // Tab switching
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tab = btn.dataset.tab;
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById(tab + 'Tab').classList.add('active');
+            });
+        });
+
+        // Rating stars
+        document.querySelectorAll('.star').forEach(star => {
+            star.addEventListener('click', () => {
+                const rating = star.dataset.rating;
+                document.getElementById('shareRating').value = rating;
+                document.querySelectorAll('.star').forEach((s, i) => {
+                    s.classList.toggle('selected', i < rating);
+                });
+            });
+        });
+
+        // Load social feed
+        async function loadSocialFeed() {
+            const feedDiv = document.getElementById('socialFeed');
+            try {
+                const q = query(collection(db, "sharedMeals"), orderBy("sharedAt", "desc"), limit(20));
+                const snapshot = await getDocs(q);
+                
+                feedDiv.innerHTML = '';
+                
+                if (snapshot.empty) {
+                    feedDiv.innerHTML = '<p>No shared meals yet. Be the first to share!</p>';
+                    return;
+                }
+
+                snapshot.forEach(doc => {
+                    const meal = doc.data();
+                    const mealCard = createSocialMealCard(meal, doc.id);
+                    feedDiv.appendChild(mealCard);
+                    loadComments(doc.id);
+                });
+            } catch (error) {
+                feedDiv.innerHTML = '<p>Error loading social feed.</p>';
+            }
+        }
+
+        // Create social meal card
+        function createSocialMealCard(meal, mealId) {
+            const card = document.createElement('div');
+            card.className = 'social-meal-card';
+            
+            const stars = '★'.repeat(meal.rating) + '☆'.repeat(5 - meal.rating);
+            const date = new Date(meal.sharedAt).toLocaleDateString();
+            
+            card.innerHTML = `
+                <div class="social-header">
+                    <strong>${meal.sharedBy}</strong>
+                    <span class="share-date">${date}</span>
+                </div>
+                <h3>${meal.name}</h3>
+                <div class="meal-rating">${stars} (${meal.rating}/5)</div>
+                ${meal.comment ? `<p class="meal-comment">"${meal.comment}"</p>` : ''}
+                <div class="nutrition-info">
+                    Calories: ${meal.calories} | Protein: ${meal.protein}g | Fiber: ${meal.fiber}g
+                </div>
+                <div class="meal-actions">
+                    <button class="save-shared-meal" data-meal='${JSON.stringify(meal)}'>Save to My Meals</button>
+                    <button class="toggle-comments" data-meal-id="${mealId}">💬 Comments</button>
+                </div>
+                <div class="comments-section" id="comments-${mealId}" style="display: none;">
+                    <div class="comments-list"></div>
+                    <div class="add-comment">
+                        <textarea placeholder="Add a comment..." maxlength="200"></textarea>
+                        <button class="post-comment" data-meal-id="${mealId}">Post</button>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        // Load user meals for sharing
+        async function loadUserMeals() {
+            const select = document.getElementById('mealSelect');
+            
+            if (!currentUser) {
+                select.innerHTML = '<option value="">Please log in to share meals</option>';
+                return;
+            }
+            
+            try {
+                const snapshot = await getDocs(collection(db, "users", currentUser.uid, "savedMeals"));
+                select.innerHTML = '<option value="">Select a meal to share...</option>';
+                
+                if (snapshot.empty) {
+                    select.innerHTML = '<option value="">No saved meals found. Save some meals first!</option>';
+                    return;
+                }
+                
+                snapshot.forEach(doc => {
+                    const meal = doc.data();
+                    const option = document.createElement('option');
+                    option.value = JSON.stringify({...meal, id: doc.id});
+                    option.textContent = meal.name || 'Unnamed Meal';
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error loading meals:', error);
+                select.innerHTML = '<option value="">Error loading meals</option>';
+            }
+        }
+
+        // Share meal form
+        document.getElementById('shareMealForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Sharing...';
+            submitBtn.disabled = true;
+            
+            try {
+                if (!currentUser) {
+                    alert('Please log in to share meals');
+                    return;
+                }
+                
+                const mealSelectValue = document.getElementById('mealSelect').value;
+                if (!mealSelectValue) {
+                    alert('Please select a meal to share');
+                    return;
+                }
+                
+                const mealData = JSON.parse(mealSelectValue);
+                const comment = document.getElementById('shareComment').value.trim();
+                const rating = parseInt(document.getElementById('shareRating').value);
+                
+                if (!rating || rating < 1 || rating > 5) {
+                    alert('Please select a valid rating (1-5 stars)');
+                    return;
+                }
+                
+                const shareData = {
+                    name: mealData.name || 'Unnamed Meal',
+                    calories: mealData.calories || 0,
+                    protein: mealData.protein || 0,
+                    fiber: mealData.fiber || 0,
+                    sugar: mealData.sugar || 0,
+                    fat: mealData.fat || 0,
+                    ingredients: mealData.ingredients || [],
+                    sharedBy: localStorage.getItem('userName') || currentUser.email,
+                    sharedById: currentUser.uid,
+                    comment: comment,
+                    rating: rating,
+                    sharedAt: new Date().toISOString()
+                };
+                
+                console.log('Attempting to share meal:', shareData);
+                await addDoc(collection(db, "sharedMeals"), shareData);
+                
+                alert('Meal shared successfully!');
+                document.getElementById('shareMealForm').reset();
+                document.getElementById('shareRating').value = '5';
+                document.querySelectorAll('.star').forEach((s, i) => {
+                    s.classList.toggle('selected', i < 5);
+                });
+                loadSocialFeed();
+                
+            } catch (error) {
+                console.error('Detailed error sharing meal:', error);
+                console.error('Error code:', error.code);
+                console.error('Error message:', error.message);
+                alert(`Error sharing meal: ${error.message || 'Unknown error'}. Check console for details.`);
+            } finally {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Load comments for a meal
+        async function loadComments(mealId) {
+            try {
+                const q = query(collection(db, "mealComments", mealId, "comments"), orderBy("createdAt", "asc"));
+                const snapshot = await getDocs(q);
+                const commentsList = document.querySelector(`#comments-${mealId} .comments-list`);
+                
+                if (!commentsList) return;
+                
+                commentsList.innerHTML = '';
+                snapshot.forEach(doc => {
+                    const comment = doc.data();
+                    const commentDiv = document.createElement('div');
+                    commentDiv.className = 'comment';
+                    commentDiv.innerHTML = `
+                        <strong>${comment.userName}</strong>
+                        <span class="comment-date">${new Date(comment.createdAt).toLocaleDateString()}</span>
+                        <p>${comment.text}</p>
+                    `;
+                    commentsList.appendChild(commentDiv);
+                });
+            } catch (error) {
+                console.error('Error loading comments:', error);
+            }
+        }
+
+        // Event handlers
+        document.addEventListener('click', async (e) => {
+            // Save shared meal
+            if (e.target.classList.contains('save-shared-meal')) {
+                if (!currentUser) {
+                    alert('Please log in to save meals');
+                    return;
+                }
+                
+                const mealData = JSON.parse(e.target.dataset.meal);
+                delete mealData.sharedBy;
+                delete mealData.sharedById;
+                delete mealData.comment;
+                delete mealData.rating;
+                delete mealData.sharedAt;
+                
+                try {
+                    await addDoc(collection(db, "users", currentUser.uid, "savedMeals"), {
+                        ...mealData,
+                        savedAt: new Date().toISOString()
+                    });
+                    
+                    alert('Meal saved to your collection!');
+                    e.target.textContent = 'Saved!';
+                    e.target.disabled = true;
+                } catch (error) {
+                    alert('Error saving meal');
+                }
+            }
+            
+            // Toggle comments
+            if (e.target.classList.contains('toggle-comments')) {
+                const mealId = e.target.dataset.mealId;
+                const commentsSection = document.getElementById(`comments-${mealId}`);
+                const isVisible = commentsSection.style.display !== 'none';
+                commentsSection.style.display = isVisible ? 'none' : 'block';
+                e.target.textContent = isVisible ? '💬 Comments' : '💬 Hide';
+            }
+            
+            // Post comment
+            if (e.target.classList.contains('post-comment')) {
+                if (!currentUser) {
+                    alert('Please log in to comment');
+                    return;
+                }
+                
+                const mealId = e.target.dataset.mealId;
+                const textarea = e.target.previousElementSibling;
+                const commentText = textarea.value.trim();
+                
+                if (!commentText) {
+                    alert('Please enter a comment');
+                    return;
+                }
+                
+                try {
+                    await addDoc(collection(db, "mealComments", mealId, "comments"), {
+                        text: commentText,
+                        userName: localStorage.getItem('userName') || currentUser.email,
+                        userId: currentUser.uid,
+                        createdAt: new Date().toISOString()
+                    });
+                    
+                    textarea.value = '';
+                    loadComments(mealId);
+                } catch (error) {
+                    alert('Error posting comment');
+                }
+            }
+        });
+    </script>
+
+    <style>
+        .social-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .tab-btn {
+            padding: 10px 20px;
+            background: #ecf0f1;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .tab-btn.active {
+            background: #3498db;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .social-meal-card {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-left: 4px solid #3498db;
+        }
+        
+        .social-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: #666;
+        }
+        
+        .meal-rating {
+            color: #f39c12;
+            margin: 10px 0;
+        }
+        
+        .meal-comment {
+            font-style: italic;
+            color: #555;
+            margin: 10px 0;
+        }
+        
+        .share-meal-form {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .rating-input {
+            margin: 10px 0;
+        }
+        
+        .star {
+            font-size: 24px;
+            color: #ddd;
+            cursor: pointer;
+        }
+        
+        .star.selected {
+            color: #f39c12;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .save-shared-meal {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .save-shared-meal:hover {
+            background: #229954;
+        }
+        
+        .save-shared-meal:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+        }
+        
+        .meal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .toggle-comments {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        
+        .toggle-comments:hover {
+            background: #2980b9;
+        }
+        
+        .comments-section {
+            margin-top: 15px;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+        
+        .comment {
+            background: #f8f9fa;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 3px solid #3498db;
+        }
+        
+        .comment strong {
+            color: #2c3e50;
+        }
+        
+        .comment-date {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-left: 10px;
+        }
+        
+        .comment p {
+            margin: 5px 0 0 0;
+            color: #34495e;
+        }
+        
+        .add-comment {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .add-comment textarea {
+            flex: 1;
+            min-height: 40px;
+            resize: none;
+        }
+        
+        .post-comment {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        
+        .post-comment:hover {
+            background: #229954;
+        }
+        
+        /* User info and logout button styles to match saved-meals */
+        .user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .user-info p {
+            margin: 0;
+            font-weight: bold;
+        }
+        
+        .user-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .logout-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .logout-btn:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</body>
+</html>

@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saved Meals - Meal Planner</title>
+    <link rel="icon" href="logo.jpeg" type="image/jpeg">
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        // Immediately check if user is authenticated
+        (function() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            const hasUserData = localStorage.getItem('userName') && localStorage.getItem('userEmail');
+            
+            console.log("Auth check - isLoggedIn:", isLoggedIn, "hasUserData:", hasUserData);
+            
+            if (!isLoggedIn || !hasUserData) {
+                console.log("No valid authentication found, redirecting to login page");
+                localStorage.removeItem('userName');
+                localStorage.removeItem('userEmail');
+                localStorage.removeItem('isLoggedIn');
+                window.location.replace('login.html');
+            } else {
+                console.log("User authenticated:", localStorage.getItem('userName'));
+            }
+        })();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Daily Meal Planner</h1>
+        <div id="userInfo" class="user-info" style="display: none;">
+            <p>Welcome, <span id="userName">User</span>!</p>
+            <div class="user-buttons">
+                <button id="logoutBtn" class="logout-btn">Logout</button>
+            </div>
+        </div>
+        
+        <div class="nav-buttons">
+            <a href="index.html" class="nav-btn">Home</a>
+            <a href="saved-meals.html" class="nav-btn active">Saved Meals</a>
+            <a href="social.html" class="nav-btn">Social</a>
+        </div>
+        
+        <h2>Your Saved Meals</h2>
+        <p>Here are the meals you've saved for future reference.</p>
+        
+        <div id="savedMealsList" class="meal-list">
+            <div class="loading-spinner">Loading your saved meals...</div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp, getApp } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-app.js";
+        import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-auth.js";
+        import { getFirestore, collection, getDocs, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-firestore.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyARSa7Bs-0g55DBhi2EQvJ32BHlszCv8WY",
+            authDomain: "daily-meal-planner-f96db.firebaseapp.com",
+            projectId: "daily-meal-planner-f96db",
+            storageBucket: "daily-meal-planner-f96db.firebasestorage.app",
+            messagingSenderId: "494913060879",
+            appId: "1:494913060879:web:7c346a989ca633f33b237a"
+        };
+
+        // Initialize Firebase
+        let app;
+        try {
+            app = initializeApp(firebaseConfig);
+            console.log("Firebase initialized successfully");
+        } catch (error) {
+            // If already initialized, use the existing app
+            if (error.code === 'app/duplicate-app') {
+                console.log("Firebase already initialized, using existing app");
+                app = getApp();
+            } else {
+                console.error("Firebase initialization error:", error);
+                throw error;
+            }
+        }
+
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        console.log("Firebase auth and Firestore initialized");
+
+        // Check if user is logged in
+        onAuthStateChanged(auth, (user) => {
+            const userInfo = document.getElementById('userInfo');
+            const userName = document.getElementById('userName');
+            
+            if (user) {
+                // User is signed in
+                console.log("User is signed in:", user.uid);
+                userInfo.style.display = 'flex';
+                const storedName = localStorage.getItem('userName');
+                userName.textContent = storedName || user.displayName || user.email;
+                
+                // Load saved meals
+                loadSavedMeals(user.uid);
+            } else {
+                // Check if we have user info in localStorage but Firebase auth is not ready yet
+                const storedName = localStorage.getItem('userName');
+                const storedEmail = localStorage.getItem('userEmail');
+                const isGuest = storedName === 'Guest' && storedEmail === 'guest@example.com';
+                
+                if (storedName && storedEmail && !isGuest) {
+                    console.log("User info in localStorage but not authenticated yet");
+                    userInfo.style.display = 'flex';
+                    userName.textContent = storedName;
+                    
+                    // Try to sign in with stored credentials or wait for auth state to change
+                    // For now, show a message
+                    document.getElementById('savedMealsList').innerHTML = 
+                        "<p>Waiting for authentication... If this persists, please try logging in again.</p>";
+                } else {
+                    // User is signed out
+                    console.log("User is signed out");
+                    userInfo.style.display = 'none';
+                    window.location.href = 'login.html';
+                }
+            }
+        });
+
+        // Handle logout
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+                localStorage.removeItem('userName');
+                localStorage.removeItem('userEmail');
+                localStorage.removeItem('isLoggedIn');
+                window.location.href = 'login.html';
+            } catch (error) {
+                console.error("Error signing out:", error);
+            }
+        });
+
+        // Function to load saved meals
+        async function loadSavedMeals(userId) {
+            console.log("Loading saved meals for user:", userId);
+            const savedMealsList = document.getElementById('savedMealsList');
+            
+            try {
+                const userMealsRef = collection(db, "users", userId, "savedMeals");
+                console.log("Fetching from collection path:", `users/${userId}/savedMeals`);
+                
+                const querySnapshot = await getDocs(userMealsRef);
+                console.log("Query snapshot received, empty:", querySnapshot.empty);
+                
+                // Clear loading message
+                savedMealsList.innerHTML = "";
+                
+                if (querySnapshot.empty) {
+                    savedMealsList.innerHTML = "<p>You haven't saved any meals yet. Go to the home page to find and save meals!</p>";
+                    return;
+                }
+                
+                // Create meal container
+                const mealContainer = document.createElement('div');
+                mealContainer.classList.add('meal-container');
+                
+                // Add each saved meal as a card
+                querySnapshot.forEach((doc) => {
+                    console.log("Processing saved meal document:", doc.id);
+                    const meal = doc.data();
+                    const mealId = doc.id;
+                    
+                    const mealCard = document.createElement('div');
+                    mealCard.classList.add('meal-card');
+                    
+                    // Create meal content
+                    let mealHTML = `<h3>${meal.name}`;
+                    
+                    // Add dietary badges
+                    if (meal.isVegan) {
+                        mealHTML += ` <span class="vegan-badge">Vegan</span>`;
+                    } else if (meal.isVegetarian) {
+                        mealHTML += ` <span class="veg-badge">Veg</span>`;
+                    } else {
+                        mealHTML += ` <span class="non-veg-badge">Non-Veg</span>`;
+                    }
+                    
+                    if (meal.isLiquid) {
+                        mealHTML += ` <span class="liquid-badge">Liquid</span>`;
+                    }
+                    
+                    // Add cuisine badges
+                    if (meal.isAmerican) {
+                        mealHTML += ` <span class="american-badge">American</span>`;
+                    }
+                    if (meal.isAsian && !meal.isChinese && !meal.isIndian && !meal.isJapanese) {
+                        mealHTML += ` <span class="asian-badge">Asian</span>`;
+                    }
+                    if (meal.isChinese) {
+                        mealHTML += ` <span class="chinese-badge">Chinese</span>`;
+                    }
+                    if (meal.isIndian) {
+                        mealHTML += ` <span class="indian-badge">Indian</span>`;
+                    }
+                    if (meal.isItalian) {
+                        mealHTML += ` <span class="italian-badge">Italian</span>`;
+                    }
+                    if (meal.isJapanese) {
+                        mealHTML += ` <span class="japanese-badge">Japanese</span>`;
+                    }
+                    if (meal.isMediterranean) {
+                        mealHTML += ` <span class="mediterranean-badge">Mediterranean</span>`;
+                    }
+                    if (meal.isMexican) {
+                        mealHTML += ` <span class="mexican-badge">Mexican</span>`;
+                    }
+                    
+                    mealHTML += `</h3>`;
+                    
+                    // Add saved date if available
+                    if (meal.savedAt) {
+                        const savedDate = new Date(meal.savedAt);
+                        mealHTML += `<p class="saved-date">Saved on: ${savedDate.toLocaleDateString()}</p>`;
+                    }
+                    
+                    // Add nutritional info
+                    mealHTML += `<p class="nutrition-info">
+                        Calories: ${meal.calories} | 
+                        Protein: ${meal.protein}g | 
+                        Fiber: ${meal.fiber}g | 
+                        Sugar: ${meal.sugar}g | 
+                        Fat: ${meal.fat}g
+                    </p>`;
+                    
+                    mealHTML += `<p><strong>Ingredients:</strong></p><ul>`;
+                    for (let ingredient in meal.ingredients) {
+                        mealHTML += `<li>${ingredient}: ${meal.ingredients[ingredient]}g</li>`;
+                    }
+                    mealHTML += `</ul>`;
+                    
+                    // Add remove meal button
+                    mealHTML += `<button class="remove-meal-btn" data-meal-id="${mealId}">Remove from Saved</button>`;
+                    
+                    mealCard.innerHTML = mealHTML;
+                    mealContainer.appendChild(mealCard);
+                });
+                
+                savedMealsList.appendChild(mealContainer);
+                
+                // Add event listeners to remove buttons
+                document.querySelectorAll('.remove-meal-btn').forEach(button => {
+                    button.addEventListener('click', removeSavedMeal);
+                });
+                
+            } catch (error) {
+                console.error("Error loading saved meals:", error);
+                savedMealsList.innerHTML = "<p>Error loading your saved meals. Please try again later.</p>";
+            }
+        }
+        
+        // Function to remove a saved meal
+        async function removeSavedMeal(event) {
+            const mealId = event.target.getAttribute('data-meal-id');
+            const userId = auth.currentUser.uid;
+            
+            try {
+                // Delete the document from Firestore
+                await deleteDoc(doc(db, "users", userId, "savedMeals", mealId));
+                
+                // Remove the meal card from the UI
+                const mealCard = event.target.closest('.meal-card');
+                mealCard.style.opacity = '0';
+                setTimeout(() => {
+                    mealCard.remove();
+                    
+                    // Check if there are no more meals
+                    const mealContainer = document.querySelector('.meal-container');
+                    if (mealContainer && mealContainer.children.length === 0) {
+                        document.getElementById('savedMealsList').innerHTML = 
+                            "<p>You haven't saved any meals yet. Go to the home page to find and save meals!</p>";
+                    }
+                }, 300);
+                
+                alert("Meal removed from saved meals.");
+            } catch (error) {
+                console.error("Error removing meal:", error);
+                alert("Failed to remove meal. Please try again.");
+            }
+        }
+    </script>
+    
+    <style>
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .nav-btn {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+        
+        .nav-btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .nav-btn.active {
+            background-color: #2c3e50;
+        }
+        
+        .saved-date {
+            font-size: 0.8em;
+            color: #777;
+            font-style: italic;
+            margin-top: -5px;
+            margin-bottom: 10px;
+        }
+        
+        .remove-meal-btn {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin-top: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+            font-weight: bold;
+        }
+        
+        .remove-meal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+        }
+        
+        .loading-spinner {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+        }
+        
+        .meal-card {
+            transition: opacity 0.3s ease;
+        }
+        
+        /* Add user info styles to match index.html */
+        .user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .user-info p {
+            margin: 0;
+            font-weight: bold;
+        }
+        
+        .user-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .logout-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .logout-btn:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</body>
+</html>

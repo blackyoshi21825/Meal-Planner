@@ -1,0 +1,515 @@
+/* Enhanced Basic Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    color: #2c3e50;
+    padding: 30px 30px 0 30px;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 30px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    transform: translateY(0);
+    animation: fadeIn 0.8s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-size: 2.2em;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+/* Enhanced Form Styles */
+form {
+    margin-bottom: 30px;
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+form label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+    color: #34495e;
+}
+
+form input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
+form input:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.25);
+    outline: none;
+}
+
+form button {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+form button:hover {
+    background: linear-gradient(135deg, #2980b9 0%, #2573a7 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+}
+
+form button:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Enhanced Filter Options */
+.filter-options {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 25px 0;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    border-left: 4px solid #3498db;
+}
+
+.filter-options h3 {
+    margin-bottom: 15px;
+    color: #2c3e50;
+    font-size: 1.3em;
+}
+
+.filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.filter-row label {
+    margin-right: 10px;
+    white-space: nowrap;
+}
+
+.filter-options label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin: 0;
+    font-weight: normal;
+    padding: 8px 15px;
+    border-radius: 20px;
+    background-color: #ecf0f1;
+    transition: all 0.2s ease;
+}
+
+.filter-options label:hover {
+    background-color: #e0e6e9;
+    transform: translateY(-2px);
+}
+
+.filter-options input[type="radio"] {
+    width: auto;
+    margin-right: 8px;
+    cursor: pointer;
+}
+
+.filter-options input[type="radio"]:checked + label {
+    background-color: #3498db;
+    color: white;
+}
+
+/* Enhanced Meal Cards */
+.meal-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    justify-content: center;
+}
+
+.meal-card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    width: 300px;
+    transition: all 0.3s ease;
+    border-top: 5px solid #3498db;
+}
+
+.meal-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+}
+
+.meal-card h3 {
+    color: #2c3e50;
+    margin-bottom: 12px;
+    font-size: 1.2em;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 8px;
+}
+
+.meal-card ul {
+    list-style-type: none;
+    max-height: 150px;
+    overflow-y: auto;
+    padding-right: 5px;
+    margin-top: 10px;
+}
+
+.meal-card ul::-webkit-scrollbar {
+    width: 6px;
+}
+
+.meal-card ul::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.meal-card ul::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 10px;
+}
+
+.meal-card ul::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+.meal-card ul li {
+    margin: 8px 0;
+    font-size: 0.9em;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+.meal-card ul li:hover {
+    background-color: #f8f9fa;
+}
+
+/* Enhanced Badge Styles */
+.veg-badge, .non-veg-badge, .vegan-badge, .liquid-badge {
+    color: white;
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-size: 0.7em;
+    font-weight: bold;
+    vertical-align: middle;
+    margin-left: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: inline-block;
+}
+
+.veg-badge {
+    background: linear-gradient(135deg, #4CAF50 0%, #388E3C 100%);
+}
+
+.non-veg-badge {
+    background: linear-gradient(135deg, #E53935 0%, #C62828 100%);
+}
+
+.vegan-badge {
+    background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+}
+
+.liquid-badge {
+    background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+}
+
+/* Add cuisine badge styles */
+.american-badge, .asian-badge, .chinese-badge, .indian-badge, .italian-badge, .japanese-badge, .mediterranean-badge, .mexican-badge {
+    color: white;
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-size: 0.7em;
+    font-weight: bold;
+    vertical-align: middle;
+    margin-left: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: inline-block;
+}
+
+.american-badge {
+    background: linear-gradient(135deg, #3F51B5 0%, #303F9F 100%);
+}
+
+.asian-badge {
+    background: linear-gradient(135deg, #FF4081 0%, #C2185B 100%);
+}
+
+.chinese-badge {
+    background: linear-gradient(135deg, #F44336 0%, #D32F2F 100%);
+}
+
+.indian-badge {
+    background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+}
+
+.mediterranean-badge {
+    background: linear-gradient(135deg, #00BCD4 0%, #0097A7 100%);
+}
+
+.mexican-badge {
+    background: linear-gradient(135deg, #8BC34A 0%, #689F38 100%);
+}
+
+.italian-badge {
+    background: linear-gradient(135deg, #7E57C2 0%, #512DA8 100%);
+}
+
+.japanese-badge {
+    background: linear-gradient(135deg, #E91E63 0%, #C2185B 100%);
+}
+
+/* Enhanced Nutrition Info */
+.nutrition-info {
+    font-size: 0.9em;
+    color: #555;
+    margin: 12px 0;
+    background-color: #f5f5f5;
+    padding: 10px;
+    border-radius: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: space-between;
+}
+
+.nutrition-info span {
+    background-color: #e9ecef;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+    
+    .meal-container {
+        gap: 15px;
+    }
+    
+    .meal-card {
+        width: 100%;
+    }
+    
+    .filter-row {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+/* Add pagination styles */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+    gap: 15px;
+}
+
+.pagination button {
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.pagination button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.pagination button:disabled {
+    background: #cccccc;
+    cursor: not-allowed;
+}
+
+.page-indicator {
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+/* Make meal container scrollable for many results */
+#mealList {
+    max-height: 800px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+#mealList::-webkit-scrollbar {
+    width: 8px;
+}
+
+#mealList::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+#mealList::-webkit-scrollbar-thumb {
+    background: #3498db;
+    border-radius: 10px;
+}
+
+/* Add to styles.css */
+.suggestion-btn {
+    background-color: #8e44ad;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 12px;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    width: 100%;
+}
+
+.suggestion-btn:hover {
+    background-color: #7d3c98;
+}
+
+.suggestions-container {
+    margin-top: 10px;
+    background-color: #f9f9f9;
+    border-radius: 6px;
+    padding: 10px;
+    border-left: 3px solid #8e44ad;
+}
+
+.suggestions-list {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.suggestion-reason {
+    font-size: 0.8em;
+    color: #666;
+    font-style: italic;
+}
+
+/* Save Meal Button */
+.save-meal-btn {
+    background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    font-weight: bold;
+}
+
+.save-meal-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    background: linear-gradient(135deg, #7d3c98 0%, #8e44ad 100%);
+}
+
+.save-meal-btn:disabled {
+    background: #cccccc;
+    cursor: not-allowed;
+}
+
+/* Navigation buttons */
+.nav-buttons {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.nav-btn {
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+}
+
+.nav-btn.active {
+    background-color: #2c3e50;
+}
+
+/* Saved meals specific styles */
+.saved-date {
+    font-size: 0.8em;
+    color: #777;
+    font-style: italic;
+    margin-top: -5px;
+    margin-bottom: 10px;
+}
+
+.remove-meal-btn {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    font-weight: bold;
+}
+
+.remove-meal-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+}
+
+.loading-spinner {
+    text-align: center;
+    padding: 20px;
+    color: #777;
+}

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meal Planner - Sign Up</title>
+    <link rel="icon" href="logo.jpeg" type="image/jpeg">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .auth-container {
+            background-color: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            max-width: 450px;
+            margin: 0 auto;
+            margin-top: 20px;
+        }
+        
+        .auth-form input {
+            margin-bottom: 15px;
+        }
+        
+        .auth-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        
+        .redirect-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .redirect-link a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Daily Meal Planner</h1>
+        
+        <div class="auth-container">
+            <h2>Create Account</h2>
+            
+            <form id="signupForm" class="auth-form">
+                <label for="signupName">Full Name:</label>
+                <input type="text" id="signupName" required>
+                
+                <label for="signupEmail">Email:</label>
+                <input type="email" id="signupEmail" required>
+                
+                <label for="signupPassword">Password:</label>
+                <input type="password" id="signupPassword" required>
+                <div id="passwordError" class="error-message">Password must be at least 6 characters</div>
+                
+                <label for="confirmPassword">Confirm Password:</label>
+                <input type="password" id="confirmPassword" required>
+                <div id="confirmError" class="error-message">Passwords do not match</div>
+                
+                <button type="submit" class="auth-btn">Sign Up</button>
+            </form>
+            
+            <p class="redirect-link">
+                Already have an account? <a href="login.html">Login</a>
+            </p>
+            
+            <p class="redirect-link">
+                <a href="index.html">Continue as guest</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-firestore.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyARSa7Bs-0g55DBhi2EQvJ32BHlszCv8WY",
+            authDomain: "daily-meal-planner-f96db.firebaseapp.com",
+            projectId: "daily-meal-planner-f96db",
+            storageBucket: "daily-meal-planner-f96db.firebasestorage.app",
+            messagingSenderId: "494913060879",
+            appId: "1:494913060879:web:7c346a989ca633f33b237a"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Handle signup form submission
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const fullName = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            // Reset error messages
+            document.getElementById('passwordError').style.display = 'none';
+            document.getElementById('confirmError').style.display = 'none';
+            
+            // Validate password
+            if (password.length < 6) {
+                document.getElementById('passwordError').style.display = 'block';
+                return;
+            }
+            
+            // Confirm passwords match
+            if (password !== confirmPassword) {
+                document.getElementById('confirmError').style.display = 'block';
+                return;
+            }
+            
+            try {
+                // Create user with email and password
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                
+                // Update profile with display name
+                await updateProfile(user, {
+                    displayName: fullName
+                });
+                
+                // Store additional user data in Firestore
+                await setDoc(doc(db, "users", user.uid), {
+                    fullName: fullName,
+                    email: email,
+                    createdAt: new Date().toISOString(),
+                    preferences: {
+                        dietaryRestrictions: [],
+                        favoriteCuisines: []
+                    }
+                });
+                
+                // Save user info to localStorage for display on home page
+                localStorage.setItem('userName', fullName);
+                localStorage.setItem('userEmail', email);
+                
+                // Redirect to home page
+                window.location.href = 'index.html';
+                
+            } catch (error) {
+                console.error("Error signing up:", error);
+                alert("Sign up failed: " + error.message);
+            }
+        });
+    </script>
+</body>
+</html>
