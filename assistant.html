@@ -143,7 +143,6 @@
         function initCuisineStacking() {
             const cf = document.querySelector('.cuisine-filters');
             const panel = document.querySelector('.filter-panel') || document.body;
-            const forceBtn = document.getElementById('forceStackBtn');
             if (!cf) return;
 
             function updateStack() {
@@ -189,40 +188,7 @@
             // Initial check and on resize
             updateStack();
             window.addEventListener('resize', updateStack);
-            // Force button toggles stacking manually for debugging
-            if (forceBtn) {
-                forceBtn.addEventListener('click', () => {
-                    if (cf.classList.contains('stack')) {
-                        // unforce
-                        cf.classList.remove('stack');
-                        cf.style.removeProperty('display');
-                        cf.style.removeProperty('flex-direction');
-                        cf.style.removeProperty('align-items');
-                        cf.querySelectorAll('label').forEach(lbl => {
-                            lbl.style.removeProperty('display');
-                            lbl.style.removeProperty('align-items');
-                            lbl.style.removeProperty('gap');
-                            lbl.style.removeProperty('padding');
-                            lbl.style.removeProperty('width');
-                        });
-                        forceBtn.textContent = 'Force Stack';
-                    } else {
-                        // force stack
-                        cf.classList.add('stack');
-                        cf.style.setProperty('display', 'flex', 'important');
-                        cf.style.setProperty('flex-direction', 'column', 'important');
-                        cf.style.setProperty('align-items', 'flex-start', 'important');
-                        cf.querySelectorAll('label').forEach(lbl => {
-                            lbl.style.setProperty('display', 'inline-flex', 'important');
-                            lbl.style.setProperty('align-items', 'center', 'important');
-                            lbl.style.setProperty('gap', '10px', 'important');
-                            lbl.style.setProperty('padding', '8px 6px', 'important');
-                            lbl.style.setProperty('width', 'auto', 'important');
-                        });
-                        forceBtn.textContent = 'Unforce Stack';
-                    }
-                });
-            }
+            
         }
 
         // Run on load and also in case DOM isn't fully ready
