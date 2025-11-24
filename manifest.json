@@ -1,20 +1,26 @@
 {
-    "name": "CORA - Meal Planner",
-    "short_name": "CORA",
-    "start_url": "index.html",
-    "display": "standalone",
-    "background_color": "#ffffff",
-    "theme_color": "#3498db",
-    "icons": [
-        {
-            "src": "logo.jpeg",
-            "sizes": "192x192",
-            "type": "image/jpeg"
-        },
-        {
-            "src": "logo.jpeg",
-            "sizes": "512x512",
-            "type": "image/jpeg"
-        }
-    ]
+  "background_color": "#ffffff",
+  "dir": "ltr",
+  "display": "fullscreen",
+  "name": "meal-planner-seven-rho.vercel",
+  "orientation": "portrait",
+  "scope": "/",
+  "short_name": "meal-planner-seven-rho.vercel",
+  "start_url": "/",
+  "theme_color": "#ffffff",
+  "icons": [
+    {
+      "src": "https://meal-planner-seven-rho.vercel.app/logo.jpeg",
+      "type": "image/jpeg",
+      "sizes": "225x225",
+      "isSquare": true,
+      "isPng": false,
+      "isWebp": false,
+      "isJpg": true,
+      "width": 225,
+      "is512x512": false,
+      "is256x256": false,
+      "is192x192": false
+    }
+  ]
 }
