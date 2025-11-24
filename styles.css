@@ -784,4 +784,24 @@ form button:active {
         width: 100%;
         padding: 16px;
     }
+
+    /* Stack cuisine checkboxes vertically on small screens */
+    .cuisine-filters {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    .cuisine-filters label {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        padding: 10px 12px;
+        box-sizing: border-box;
+    }
+
+    .cuisine-filters input[type="checkbox"] {
+        margin-right: 0;
+        margin-left: 8px;
+    }
 }
