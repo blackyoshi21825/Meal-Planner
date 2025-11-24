@@ -800,7 +800,8 @@ form button:active {
         gap: 10px;
         padding: 8px 6px;
         box-sizing: border-box;
-        width: auto; /* do not force full width */
+        width: auto;
+        /* do not force full width */
     }
 
     .cuisine-filters input[type="checkbox"] {
