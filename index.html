@@ -4,8 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meal Planner</title>
+    <title>CORA - Meal Planner</title>
     <link rel="icon" href="logo.jpeg" type="image/jpeg">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#3498db">
     <link rel="stylesheet" href="styles.css">
     <script>
         // Immediately check if user is authenticated
@@ -33,7 +35,7 @@
 
 <body>
     <div class="container">
-        <h1>Daily Meal Planner</h1>
+        <h1>CORA - Daily Meal Planner</h1>
         <div id="userInfo" class="user-info" style="display: none;">
             <p>Welcome, <span id="userName">User</span>!</p>
             <div class="user-buttons">
@@ -43,6 +45,7 @@
 
         <div class="nav-buttons">
             <a href="index.html" class="nav-btn active">Home</a>
+            <a href="assistant.html" class="nav-btn">Assistant</a>
             <a href="saved-meals.html" class="nav-btn">Saved Meals</a>
             <a href="social.html" class="nav-btn">Social</a>
         </div>
@@ -72,6 +75,8 @@
             <button type="button" id="getMealsBtn">Get Meals</button>
         </form>
 
+        <!-- Assistant moved to separate page: assistant.html -->
+
         <div id="mealList" class="meal-list">
             <!-- Meal suggestions will appear here -->
         </div>
@@ -80,6 +85,13 @@
     <script src="page-loader.js"></script>
     <script src="meals.js"></script>
     <script src="meal-filter.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').then(reg => {
+                console.log('ServiceWorker registered', reg);
+            }).catch(err => console.warn('SW registration failed', err));
+        }
+    </script>
     <script type="module">
         // Import Firebase auth
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-app.js";

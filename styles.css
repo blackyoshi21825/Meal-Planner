@@ -28,8 +28,15 @@ body {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 h1 {
@@ -37,7 +44,7 @@ h1 {
     color: #2c3e50;
     margin-bottom: 15px;
     font-size: 2.2em;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 /* Enhanced Form Styles */
@@ -46,7 +53,7 @@ form {
     background-color: #f8f9fa;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
 }
 
 form label {
@@ -63,7 +70,7 @@ form input {
     border: 1px solid #ddd;
     border-radius: 8px;
     font-size: 16px;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 form input:focus {
@@ -82,7 +89,7 @@ form button {
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     text-transform: uppercase;
     letter-spacing: 1px;
 }
@@ -90,12 +97,12 @@ form button {
 form button:hover {
     background: linear-gradient(135deg, #2980b9 0%, #2573a7 100%);
     transform: translateY(-2px);
-    box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
 
 form button:active {
     transform: translateY(1px);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Enhanced Filter Options */
@@ -104,7 +111,7 @@ form button:active {
     padding: 20px;
     border-radius: 10px;
     margin: 25px 0;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
     border-left: 4px solid #3498db;
 }
 
@@ -149,7 +156,7 @@ form button:active {
     cursor: pointer;
 }
 
-.filter-options input[type="radio"]:checked + label {
+.filter-options input[type="radio"]:checked+label {
     background-color: #3498db;
     color: white;
 }
@@ -166,7 +173,7 @@ form button:active {
     background-color: #fff;
     padding: 20px;
     border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
     width: 300px;
     transition: all 0.3s ease;
     border-top: 5px solid #3498db;
@@ -174,7 +181,7 @@ form button:active {
 
 .meal-card:hover {
     transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
 }
 
 .meal-card h3 {
@@ -223,7 +230,10 @@ form button:active {
 }
 
 /* Enhanced Badge Styles */
-.veg-badge, .non-veg-badge, .vegan-badge, .liquid-badge {
+.veg-badge,
+.non-veg-badge,
+.vegan-badge,
+.liquid-badge {
     color: white;
     padding: 4px 8px;
     border-radius: 20px;
@@ -231,7 +241,7 @@ form button:active {
     font-weight: bold;
     vertical-align: middle;
     margin-left: 5px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     display: inline-block;
 }
 
@@ -252,7 +262,14 @@ form button:active {
 }
 
 /* Add cuisine badge styles */
-.american-badge, .asian-badge, .chinese-badge, .indian-badge, .italian-badge, .japanese-badge, .mediterranean-badge, .mexican-badge {
+.american-badge,
+.asian-badge,
+.chinese-badge,
+.indian-badge,
+.italian-badge,
+.japanese-badge,
+.mediterranean-badge,
+.mexican-badge {
     color: white;
     padding: 4px 8px;
     border-radius: 20px;
@@ -260,7 +277,7 @@ form button:active {
     font-weight: bold;
     vertical-align: middle;
     margin-left: 5px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     display: inline-block;
 }
 
@@ -322,15 +339,15 @@ form button:active {
     .container {
         padding: 20px;
     }
-    
+
     .meal-container {
         gap: 15px;
     }
-    
+
     .meal-card {
         width: 100%;
     }
-    
+
     .filter-row {
         flex-direction: column;
         gap: 10px;
@@ -359,7 +376,7 @@ form button:active {
 
 .pagination button:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .pagination button:disabled {
@@ -445,7 +462,7 @@ form button:active {
 
 .save-meal-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     background: linear-gradient(135deg, #7d3c98 0%, #8e44ad 100%);
 }
 
@@ -459,7 +476,158 @@ form button:active {
     display: flex;
     gap: 15px;
     margin-bottom: 20px;
+
 }
+
+/* Assistant styles */
+.assistant {
+    margin-top: 20px;
+    padding: 12px;
+    border-radius: 8px;
+    background: linear-gradient(180deg, #ffffff, #f6fbff);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.assistant-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.food-info {
+    margin: 8px 0 12px 0;
+    padding: 8px;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 6px;
+}
+
+.assistant-targets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.assistant-targets label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.assistant-controls {
+    margin-bottom: 10px;
+}
+
+.filter-panel {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+
+.filter-panel select {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+
+/* Styled cuisine checkboxes */
+.cuisine-filters {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.cuisine-filters input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-right: 6px;
+    accent-color: #3498db;
+    vertical-align: middle;
+}
+
+.cuisine-filters label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #eceff1;
+}
+
+.cuisine-filters label:hover {
+    background: #eef6ff
+}
+
+.cuisine-filters label {
+    margin-left: 8px;
+    font-size: 0.95em
+}
+
+.plan-output {
+    margin-top: 10px;
+}
+
+.plan-card {
+    padding: 10px;
+    border: 1px solid #e6eefb;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    background: #fff;
+}
+
+.plan-summary {
+    font-weight: bold;
+    margin-top: 8px;
+}
+
+/* Make assistant inputs and buttons match form styles */
+.assistant input,
+.assistant select,
+.assistant textarea {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.assistant input:focus,
+.assistant select:focus,
+.assistant textarea:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.12);
+    outline: none;
+}
+
+.assistant button.primary-btn {
+    padding: 12px 16px;
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: inline-block;
+}
+
+.assistant button.primary-btn:hover {
+    background: linear-gradient(135deg, #2980b9 0%, #2573a7 100%);
+    transform: translateY(-2px);
+}
+
+.assistant .assistant-targets input {
+    min-width: 120px;
+}
+
 
 .nav-btn {
     padding: 10px 20px;
@@ -504,8 +672,24 @@ form button:active {
 
 .remove-meal-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+}
+
+/* Logout button (red) - shared across pages */
+.logout-btn {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.logout-btn:hover {
+    background-color: #c0392b;
+    transform: translateY(-2px);
 }
 
 .loading-spinner {
@@ -538,6 +722,66 @@ form button:active {
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Mobile-first improvements for PWA / APK
+   - Reduce heavy shadows and padding on small screens
+   - Make inputs and buttons easier to tap
+   - Ensure nav wraps and is touch-friendly
+*/
+@media (max-width: 480px) {
+    body {
+        padding: 12px 10px 20px 10px;
+    }
+
+    .container {
+        margin: 0 8px;
+        padding: 16px;
+        box-shadow: none;
+        border-radius: 10px;
+    }
+
+    h1 {
+        font-size: 1.6em;
+    }
+
+    form input,
+    .assistant input,
+    .assistant select,
+    .assistant .assistant-targets input {
+        padding: 14px;
+        font-size: 16px;
+    }
+
+    form button,
+    .assistant button.primary-btn,
+    .save-meal-btn,
+    .remove-meal-btn {
+        padding: 14px;
+        font-size: 16px;
+        border-radius: 10px;
+    }
+
+    .nav-buttons {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .nav-btn {
+        flex: 1 1 100%;
+        text-align: center;
+        padding: 12px 10px;
+    }
+
+    .meal-card {
+        width: 100%;
+        padding: 16px;
+    }
 }

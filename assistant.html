@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CORA - Food Assistant - Meal Planner</title>
+    <link rel="icon" href="logo.jpeg" type="image/jpeg">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#3498db">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>CORA - Food Assistant</h1>
+
+        <div id="userInfo" class="user-info" style="display: none;">
+            <p>Welcome, <span id="userName">User</span>!</p>
+            <div class="user-buttons">
+                <button id="logoutBtn" class="logout-btn">Logout</button>
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="index.html" class="nav-btn">Home</a>
+            <a href="assistant.html" class="nav-btn active">Assistant</a>
+            <a href="saved-meals.html" class="nav-btn">Saved Meals</a>
+            <a href="social.html" class="nav-btn">Social</a>
+        </div>
+
+        <p>Use the assistant to generate a daily meal plan based on targets (one Breakfast, one Lunch, one Dinner).</p>
+
+        <div class="filter-panel">
+            <label for="dietSelect">Diet:</label>
+            <select id="dietSelect">
+                <option value="any">Any</option>
+                <option value="vegan">Vegan</option>
+                <option value="vegetarian">Vegetarian</option>
+                <option value="non-veg">Non-Veg</option>
+            </select>
+
+            <div class="cuisine-filters">
+                <span> Cuisine: </span>
+                <label><input type="checkbox" class="cuisine-option" value="mediterranean"> Med</label>
+                <label><input type="checkbox" class="cuisine-option" value="indian"> Indian</label>
+                <label><input type="checkbox" class="cuisine-option" value="italian"> Italian</label>
+                <label><input type="checkbox" class="cuisine-option" value="chinese"> Chinese</label>
+                <label><input type="checkbox" class="cuisine-option" value="japanese"> Japanese</label>
+                <label><input type="checkbox" class="cuisine-option" value="mexican"> Mexican</label>
+                <label><input type="checkbox" class="cuisine-option" value="american"> American</label>
+            </div>
+        </div>
+        <!-- Food Assistant -->
+        <div id="foodAssistant" class="assistant">
+            <h2>Food Assistant</h2>
+            <p>Set targets to generate a daily meal plan. Use the sliders or
+                numeric inputs to adjust targets in real time.</p>
+
+            <!-- Lookup removed: assistant now only generates a 3-meal plan (Breakfast/Lunch/Dinner) -->
+
+            <div class="assistant-targets">
+                <label>Calories: <input type="number" id="targetCalories" value="2000" /></label>
+                <label>Protein (g): <input type="number" id="targetProtein" value="100" /></label>
+                <label>Fiber (g): <input type="number" id="targetFiber" value="25" /></label>
+                <label>Sugar (g): <input type="number" id="targetSugar" value="30" /></label>
+                <label>Fat (g): <input type="number" id="targetFat" value="70" /></label>
+                <label>Vitamins (%): <input type="number" id="targetVitamins" value="100" /></label>
+            </div>
+
+            <div class="assistant-controls">
+                <button id="generatePlanBtn" class="primary-btn" type="button">Generate Daily Plan</button>
+                <button id="regenerateBtn" class="primary-btn" type="button">Regenerate (random)</button>
+            </div>
+
+            <div id="planOutput" class="plan-output"></div>
+        </div>
+
+    </div>
+
+    <script src="page-loader.js"></script>
+    <script src="meals.js"></script>
+    <script src="assistant.js"></script>
+
+    <script type="module">
+        // Import Firebase auth (same config as index)
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-app.js";
+        import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyARSa7Bs-0g55DBhi2EQvJ32BHlszCv8WY",
+            authDomain: "daily-meal-planner-f96db.firebaseapp.com",
+            projectId: "daily-meal-planner-f96db",
+            storageBucket: "daily-meal-planner-f96db.firebasestorage.app",
+            messagingSenderId: "494913060879",
+            appId: "1:494913060879:web:7c346a989ca633f33b237a"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        onAuthStateChanged(auth, (user) => {
+            const userInfo = document.getElementById('userInfo');
+            const userName = document.getElementById('userName');
+
+            if (user) {
+                userInfo.style.display = 'flex';
+                const storedName = localStorage.getItem('userName');
+                userName.textContent = storedName || user.displayName || user.email;
+                localStorage.setItem('isLoggedIn', 'true');
+            } else {
+                const storedName = localStorage.getItem('userName');
+                const storedEmail = localStorage.getItem('userEmail');
+                const isGuest = storedName === 'Guest' && storedEmail === 'guest@example.com';
+
+                if (isGuest) {
+                    userInfo.style.display = 'flex';
+                    userName.textContent = 'Guest';
+                } else {
+                    userInfo.style.display = 'none';
+                    // optional: redirect to login
+                    // window.location.href = 'login.html';
+                }
+            }
+        });
+
+        // Logout handler
+        document.addEventListener('DOMContentLoaded', () => {
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', async () => {
+                    try {
+                        await signOut(auth);
+                        localStorage.removeItem('userName');
+                        localStorage.removeItem('userEmail');
+                        window.location.href = 'login.html';
+                    } catch (e) {
+                        console.error('Error signing out', e);
+                    }
+                });
+            }
+        });
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').then(reg => {
+                console.log('ServiceWorker registered', reg);
+            }).catch(err => console.warn('SW registration failed', err));
+        }
+    </script>
+
+</body>
+
+</html>

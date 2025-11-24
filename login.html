@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meal Planner - Login</title>
+    <title>CORA - Meal Planner - Login</title>
     <link rel="icon" href="logo.jpeg" type="image/jpeg">
     <link rel="stylesheet" href="styles.css">
     <style>
@@ -11,16 +12,16 @@
             background-color: #f8f9fa;
             padding: 25px;
             border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
             max-width: 450px;
             margin: 0 auto;
             margin-top: 20px;
         }
-        
+
         .auth-form input {
             margin-bottom: 15px;
         }
-        
+
         .auth-btn {
             width: 100%;
             padding: 12px;
@@ -33,69 +34,71 @@
             cursor: pointer;
             margin-top: 15px;
         }
-        
+
         .redirect-link {
             text-align: center;
             margin-top: 20px;
         }
-        
+
         .redirect-link a {
             color: #3498db;
             text-decoration: none;
             font-weight: bold;
-        }s
+        }
 
-        .error-message {
+        s .error-message {
             color: #e74c3c;
             font-size: 14px;
             margin-top: 5px;
             display: none;
         }
-        
+
         #loginStatus {
             margin-top: 15px;
             padding: 10px;
             border-radius: 5px;
             display: none;
         }
-        
+
         .success {
             background-color: #d4edda;
             color: #155724;
         }
-        
+
         .error {
             background-color: #f8d7da;
             color: #721c24;
         }
     </style>
 </head>
+
 <body>
     <div class="container">
-        <h1>Daily Meal Planner</h1>
-        
+        <h1>CORA - Daily Meal Planner</h1>
+
         <div class="auth-container">
             <h2>Login</h2>
-            
+
             <form id="loginForm" class="auth-form">
                 <label for="loginEmail">Email:</label>
                 <input type="email" id="loginEmail" required>
-                
+
                 <label for="loginPassword">Password:</label>
                 <input type="password" id="loginPassword" required>
                 <div id="loginError" class="error-message">Invalid email or password</div>
-                
+
                 <button type="submit" class="auth-btn">Login</button>
                 <div id="loginStatus"></div>
                 <div id="manualRedirect" style="display: none; margin-top: 15px; text-align: center;">
-                    <p>If you're not redirected automatically, <a href="index.html" style="font-weight: bold; color: #3498db;">click here</a> to go to the home page.</p>
+                    <p>If you're not redirected automatically, <a href="index.html"
+                            style="font-weight: bold; color: #3498db;">click here</a> to go to the home page.</p>
                 </div>
             </form>
-            
+
             <p class="redirect-link">
                 Don't have an account? <a href="signup.html">Sign up</a>
             </p>
-            
+
             <p class="redirect-link">
                 <a href="index.html">Continue as guest</a>
             </p>
@@ -124,14 +127,14 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        
+
         // Status display function
         function showStatus(message, isSuccess) {
             const statusElement = document.getElementById('loginStatus');
             statusElement.textContent = message;
             statusElement.className = isSuccess ? 'success' : 'error';
             statusElement.style.display = 'block';
-            
+
             // Show manual redirect link on success
             if (isSuccess && message.includes("Redirecting")) {
                 document.getElementById('manualRedirect').style.display = 'block';
@@ -139,29 +142,29 @@
         }
 
         // Handle login form submission
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        document.getElementById('loginForm').addEventListener('submit', async function (e) {
             e.preventDefault();
-            
+
             // Get form values
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
-            
+
             // Reset error message
             document.getElementById('loginError').style.display = 'none';
-            
+
             try {
                 // Sign in with email and password
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
-                
+
                 // Save user info to localStorage
                 localStorage.setItem('userName', user.displayName || 'User');
                 localStorage.setItem('userEmail', user.email);
                 localStorage.setItem('isLoggedIn', 'true');
-                
+
                 // Redirect to index.html
                 document.location.href = 'index.html';
-                
+
             } catch (error) {
                 console.error("Error signing in:", error);
                 document.getElementById('loginError').style.display = 'block';
@@ -170,17 +173,18 @@
         });
 
         // Add a direct handler for the "Continue as guest" link
-        document.querySelector('.redirect-link a[href="index.html"]').addEventListener('click', function(e) {
+        document.querySelector('.redirect-link a[href="index.html"]').addEventListener('click', function (e) {
             e.preventDefault();
-            
+
             // Set guest mode in localStorage
             localStorage.setItem('userName', 'Guest');
             localStorage.setItem('userEmail', 'guest@example.com');
             localStorage.setItem('isLoggedIn', 'true');
-            
+
             // Redirect to index.html
             document.location.href = 'index.html';
         });
     </script>
 </body>
+
 </html>
